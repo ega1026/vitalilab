@@ -1,0 +1,90 @@
+/* Estilos generales y fondo principal */
+body {
+    background-color: #ECEFF1; /* Gris muy claro - Fondo moderno */
+    font-family: Arial, sans-serif;
+    color: #333333;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Caja principal del formulario */
+.contenedor {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-top: 6px solid #00838F; /* Azul agua - Calma y confianza */
+}
+
+/* Títulos y subtítulos */
+h1 {
+    color: #00838F; /* Azul agua */
+    margin-top: 0;
+    text-align: center;
+}
+
+h3 {
+    color: #00838F; /* Azul agua */
+    border-bottom: 2px solid #80CBC4; /* Verde menta - Limpieza y salud */
+    padding-bottom: 8px;
+    margin-top: 25px;
+}
+
+p {
+    text-align: center;
+    color: #555555;
+    font-size: 15px;
+}
+
+/* Etiquetas y campos de texto/números */
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333333;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #FAFAFA;
+}
+
+/* Efecto al hacer clic en un campo para escribir */
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: #00838F;
+    outline: none;
+    box-shadow: 0 0 5px rgba(128, 203, 196, 0.6); /* Resplandor verde menta */
+}
+
+/* Botón principal */
+button {
+    width: 100%;
+    background-color: #00838F; /* Azul agua */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+/* Efecto al pasar el mouse sobre el botón */
+button:hover {
+    background-color: #80CBC4; /* Cambia a verde menta al pasar el mouse */
+    color: #004D40; /* Texto verde oscuro para que se lea bien */
+}

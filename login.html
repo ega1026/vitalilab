@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar Sesión – Proyecto Vida Saludable</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- PÁGINA DE LOGIN: formulario centrado simple -->
+  <div class="login-pagina">
+    <div class="login-caja">
+
+      <!-- Logo -->
+      <div class="login-logo">🌿 Proyecto Vida Saludable</div>
+
+      <h1>Iniciar sesión</h1>
+      <p>Ingresa tus datos para acceder al sistema.</p>
+
+      <!-- Mensajes de error y éxito -->
+      <div class="error-msg" id="error-msg">
+        ⚠️ Usuario o contraseña incorrectos.
+      </div>
+      <div class="exito-msg" id="exito-msg">
+        ✅ ¡Bienvenido/a! Redirigiendo…
+      </div>
+
+      <!-- Formulario -->
+      <form id="form-login">
+
+        <div class="campo-grupo">
+          <label for="usuario">Usuario</label>
+          <input type="text" id="usuario" name="usuario" placeholder="Ej: estudiante" required />
+        </div>
+
+        <div class="campo-grupo">
+          <label for="contrasena">Contraseña</label>
+          <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required />
+        </div>
+
+        <br>
+        <button type="submit" class="btn btn-verde">Ingresar</button>
+
+      </form>
+
+      <!-- Enlace para registrarse -->
+      <p class="login-registro">
+        ¿No tienes cuenta? <a href="perfil.html">Regístrate aquí</a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Lógica básica de validación del login -->
+  <script>
+    // Usuarios de prueba para la demo
+    const usuarios = [
+      { usuario: "admin",      contrasena: "vida2025"   },
+      { usuario: "estudiante", contrasena: "saludable"  }
+    ];
+
+    document.getElementById('form-login').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const u = document.getElementById('usuario').value.trim();
+      const c = document.getElementById('contrasena').value;
+
+      // Ocultamos mensajes anteriores
+      document.getElementById('error-msg').style.display = 'none';
+      document.getElementById('exito-msg').style.display = 'none';
+
+      // Verificamos si el usuario existe
+      const encontrado = usuarios.find(x => x.usuario === u && x.contrasena === c);
+
+      if (encontrado) {
+        document.getElementById('exito-msg').style.display = 'block';
+        // Redirigimos al inicio después de 1.5 segundos
+        setTimeout(function () {
+          window.location.href = 'index.html';
+        }, 1500);
+      } else {
+        document.getElementById('error-msg').style.display = 'block';
+      }
+    });
+  </script>
+
+</body>
+</html>
