@@ -1,6 +1,7 @@
 import sqlite3
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import urllib.parse
+import os
 
 class MiManejador(SimpleHTTPRequestHandler):
     def do_POST(self):
@@ -47,7 +48,7 @@ class MiManejador(SimpleHTTPRequestHandler):
             self.send_error(404, "Ruta no encontrada en el servidor")
 
 if __name__ == "__main__":
-    puerto = 8000
-    servidor = HTTPServer(('localhost', puerto), MiManejador)
-    print("Servidor web iniciado en http://localhost:8000")
+    puerto = int(os.environ.get("PORT", 8000))
+    servidor = HTTPServer(('0.0.0.0', puerto), MiManejador)
+    print(f"Servidor web iniciado en el puerto {puerto}")
     servidor.serve_forever()
