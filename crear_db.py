@@ -10,6 +10,7 @@ def crear_base_datos():
             nombre TEXT NOT NULL,
             edad INTEGER NOT NULL,
             grado TEXT NOT NULL,
+            correo TEXT NOT NULL,
             vasos_agua INTEGER NOT NULL,
             peso REAL DEFAULT 0,
             altura REAL DEFAULT 0,
@@ -19,7 +20,7 @@ def crear_base_datos():
     
     conexion.commit()
     conexion.close()
-    print("Base de datos y tabla perfiles creadas correctamente.")
+    print("Base de datos y tabla perfiles creadas correctamente con correo.")
 
 if __name__ == "__main__":
     crear_base_datos()

@@ -20,8 +20,8 @@
     </header>
 
     <div class="contenedor">
-        <h1>Mi Perfil Estudiantil</h1>
-        <p>Completa tus datos para que el sistema calcule tu IMC y configure tu plan de bienestar.</p>
+        <h1>Registro de Perfil</h1>
+        <p>Ingresa tus datos y tu correo (personal o institucional) para guardar tu perfil en el sistema.</p>
 
         <form action="/registrar_perfil" method="POST">
             
@@ -30,8 +30,11 @@
             <label for="nombre">Nombre completo:</label>
             <input type="text" id="nombre" name="nombre" placeholder="Ej: Laura Martínez" required>
 
+            <label for="correo">Correo electrónico (Personal o Institucional):</label>
+            <input type="email" id="correo" name="correo" placeholder="Ej: estudiante@institucion.edu.co" required>
+
             <label for="edad">Edad:</label>
-            <input type="number" id="edad" name="edad" placeholder="Ej: 14" required>
+            <input type="number" id="edad" name="edad" placeholder="Ej: 16" required>
 
             <label for="grado">Grado:</label>
             <select id="grado" name="grado" required>

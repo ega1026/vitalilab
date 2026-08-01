@@ -13,6 +13,7 @@ def inicializar_base_datos():
             nombre TEXT,
             edad INTEGER,
             grado TEXT,
+            correo TEXT,
             vasos_agua INTEGER,
             peso REAL,
             altura REAL,
@@ -30,8 +31,9 @@ class MiManejador(SimpleHTTPRequestHandler):
                 datos_post = self.rfile.read(longitud).decode('utf-8')
                 parametros = urllib.parse.parse_qs(datos_post)
                 
-                # Obtener datos de texto
+                # Obtener datos de texto y correo
                 nombre = parametros.get('nombre', [''])[0]
+                correo = parametros.get('correo', [''])[0]
                 grado = parametros.get('grado', [''])[0]
                 
                 # Obtener datos numéricos protegiendo contra errores vacíos
@@ -49,23 +51,22 @@ class MiManejador(SimpleHTTPRequestHandler):
                     altura_metros = altura / 100
                     imc = round(peso / (altura_metros * altura_metros), 2)
                 
-                # Guardar en la base de datos
+                # Guardar en la base de datos incluyendo el correo
                 conexion = sqlite3.connect("vida_saludable.db")
                 cursor = conexion.cursor()
                 cursor.execute("""
-                    INSERT INTO perfiles (nombre, edad, grado, vasos_agua, peso, altura, imc) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (nombre, edad, grado, vasos, peso, altura, imc))
+                    INSERT INTO perfiles (nombre, edad, grado, correo, vasos_agua, peso, altura, imc) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (nombre, edad, grado, correo, vasos, peso, altura, imc))
                 
                 conexion.commit()
                 conexion.close()
                 
-                # Redirigir nuevamente a la página del perfil tras guardar
+                # Redirigir nuevamente a la página del perfil tras guardar con éxito
                 self.send_response(303)
                 self.send_header('Location', '/perfil.html')
                 self.end_headers()
             except Exception as e:
-                # Si ocurre un error interno, responde con los detalles en texto para evitar el 502 mudo
                 self.send_response(500)
                 self.send_header('Content-Type', 'text/plain; charset=utf-8')
                 self.end_headers()
