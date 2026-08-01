@@ -4,14 +4,24 @@
     <meta charset="UTF-8">   
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="logovitalilab.png" type="image/png">
-    <title>Mi Perfil - Proyecto Vida Saludable</title>
+    <title>Mi Perfil - VitaliLab</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- ENCABEZADO -->
+    <header>
+        <div class="logo">🌿 VitaliLab</div>
+        <nav>
+          <a href="index.html">Inicio</a>
+          <a href="perfil.html" class="activo">Mi Perfil</a>
+          <a href="login.html">Ingresar</a>
+        </nav>
+    </header>
+
     <div class="contenedor">
-        <h1>Mi Perfil</h1>
-        <p>Completa tus datos para que el sistema calcule tu IMC y recomiende tu plan de actividad física.</p>
+        <h1>Mi Perfil Estudiantil</h1>
+        <p>Completa tus datos para que el sistema calcule tu IMC y configure tu plan de bienestar.</p>
 
         <form action="/registrar_perfil" method="POST">
             
@@ -45,13 +55,22 @@
             <h3>Hidratación diaria</h3>
 
             <label for="vasos">¿Cuántos vasos de agua has tomado hoy?</label>
-            <input type="number" id="vasos" name="vasos" placeholder="0" required>
+            <input type="number" id="vasos" name="vasos" placeholder="Ej: 6" required>
 
-            <br><br>
-            <button type="submit">Guardar perfil</button>
+            <br>
+            <button type="submit" class="btn-verde">Guardar perfil</button>
 
         </form>
     </div>
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <p>
+          <strong>VitaliLab</strong> &nbsp;·&nbsp;
+          Proyecto Productivo de Grado &nbsp;·&nbsp;
+          Media Técnica en Programación
+        </p>
+    </footer>
 
 </body>
 </html>
