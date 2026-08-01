@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logovitalilab.png" type="image/png">
+    <title>Completar Perfil - VitaliLab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">VitaliLab</div>
+        <nav>
+          <a href="index.html">Inicio</a>
+          <a href="login.html">Cerrar Sesion</a>
+        </nav>
+    </header>
+
+    <div class="contenedor">
+        <h1>Completa tus datos</h1>
+        <p>Para ofrecerte un mejor plan de salud y calcular tu IMC, necesitamos algunos datos adicionales.</p>
+
+        <form action="/guardar_datos_adicionales" method="POST">
+            
+            <input type="hidden" name="correo" id="correo-input">
+
+            <h3>Datos académicos</h3>
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" name="edad" placeholder="Ej: 16" required>
+
+            <label for="grado">Grado:</label>
+            <select id="grado" name="grado" required>
+                <option value="">Seleccionar...</option>
+                <option value="6">Sexto</option>
+                <option value="7">Septimo</option>
+                <option value="8">Octavo</option>
+                <option value="9">Noveno</option>
+                <option value="10">Decimo</option>
+                <option value="11">Once</option>
+            </select>
+
+            <h3>Medidas biometricas</h3>
+            <label for="peso">Peso (en kilogramos):</label>
+            <input type="number" step="0.1" id="peso" name="peso" placeholder="Ej: 60.5" required>
+
+            <label for="altura">Altura (en centimetros):</label>
+            <input type="number" id="altura" name="altura" placeholder="Ej: 170" required>
+
+            <h3>Hidratacion diaria</h3>
+            <label for="vasos">¿Cuantos vasos de agua has tomado hoy?</label>
+            <input type="number" id="vasos" name="vasos" placeholder="Ej: 6" required>
+
+            <br>
+            <button type="submit" class="btn-verde">Guardar y continuar</button>
+
+        </form>
+    </div>
+
+    <footer>
+        <p>
+          <strong>VitaliLab</strong> &nbsp;·&nbsp;
+          Proyecto Productivo de Grado &nbsp;·&nbsp;
+          Media Tecnica en Programacion
+        </p>
+    </footer>
+
+    <script>
+        // Recuperamos el correo del usuario logueado almacenado en el navegador
+        const correoGuardado = localStorage.getItem("usuario_activo");
+        if (correoGuardado) {
+            document.getElementById("correo-input").value = correoGuardado;
+        } else {
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

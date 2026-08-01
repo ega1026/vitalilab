@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="logovitalilab.png" type="image/png">
-  <title>Iniciar Sesión – VitaliLab</title>
+  <title>Iniciar Sesion – VitaliLab</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,26 +12,26 @@
   <div class="login-pagina">
     <div class="login-caja">
 
-      <div class="login-logo"> VitaliLab</div>
+      <div class="login-logo">VitaliLab</div>
 
-      <h1 style="font-size: 24px; text-align: center; margin-top: 0;">Iniciar sesión</h1>
+      <h1 style="font-size: 24px; text-align: center; margin-top: 0;">Iniciar sesion</h1>
       <p style="text-align: center; margin-bottom: 20px;">Ingresa tus datos para acceder al sistema.</p>
 
       <div class="error-msg" id="error-msg">
-         Usuario o contraseña incorrectos.
+        Usuario o contraseña incorrectos.
       </div>
       <div class="exito-msg" id="exito-msg">
         ¡Bienvenido/a! Redirigiendo…
       </div>
 
-      <form id="form-login">
+      <form action="/verificar_login" method="POST">
         <div class="campo-grupo">
-          <label for="usuario">Usuario</label>
-          <input type="text" id="usuario" name="usuario" placeholder="Ej: estudiante" required />
+          <label for="correo">Correo electronico</label>
+          <input type="email" id="correo" name="correo" placeholder="Ej: correo@institucion.edu.co" required />
         </div>
 
         <div class="campo-grupo" style="margin-top: 15px;">
-          <label for="contrasena">Contraseña</label>
+          <label for="contrasena">Contrasena</label>
           <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required />
         </div>
 
@@ -40,39 +40,11 @@
       </form>
 
       <p class="login-registro">
-        ¿No tienes cuenta? <a href="perfil.html">Regístrate aquí</a> | <a href="index.html">Volver al inicio</a>
+        ¿No tienes cuenta? <a href="registro.html">Registrate aquí</a> | <a href="index.html">Volver al inicio</a>
       </p>
 
     </div>
   </div>
-
-  <script>
-    const usuarios = [
-      { usuario: "admin",      contrasena: "vida2025"   },
-      { usuario: "estudiante", contrasena: "saludable"  }
-    ];
-
-    document.getElementById('form-login').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const u = document.getElementById('usuario').value.trim();
-      const c = document.getElementById('contrasena').value;
-
-      document.getElementById('error-msg').style.display = 'none';
-      document.getElementById('exito-msg').style.display = 'none';
-
-      const encontrado = usuarios.find(x => x.usuario === u && x.contrasena === c);
-
-      if (encontrado) {
-        document.getElementById('exito-msg').style.display = 'block';
-        setTimeout(function () {
-          window.location.href = 'index.html';
-        }, 1500);
-      } else {
-        document.getElementById('error-msg').style.display = 'block';
-      }
-    });
-  </script>
 
 </body>
 </html>
