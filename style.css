@@ -195,23 +195,45 @@ label {
 }
 
 input[type="text"],
+input[type="email"],
 input[type="number"],
 input[type="password"],
 select {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px 12px 42px;
     border: 1px solid #dcdcdc;
     border-radius: 8px;
     box-sizing: border-box;
     font-size: 14px;
     background-color: #fafafa;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
 input:focus, select:focus {
     border-color: #2ecc71;
-    outline: none;
     background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.15);
+}
+
+/* Contenedor especial con icono de correo */
+.input-icono-container {
+    position: relative;
+    width: 100%;
+}
+
+.input-icono-container input {
+    width: 100%;
+}
+
+.input-icono-container::before {
+    content: "✉️";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
 }
 
 /* Estilos específicos para la página de Login */
