@@ -23,7 +23,7 @@
         <h1>Registro de Perfil</h1>
         <p>Ingresa tus datos y tu correo (personal o institucional) para guardar tu perfil en el sistema.</p>
 
-        <form action="/registrar_perfil" method="POST">
+        <form action="/registrar_usuario" method="POST">
             
             <h3>Datos del estudiante</h3>
 
@@ -32,6 +32,9 @@
 
             <label for="correo">Correo electrónico (Personal o Institucional):</label>
             <input type="email" id="correo" name="correo" placeholder="Ej: estudiante@institucion.edu.co" required>
+            
+            <label for="contrasena">Crea una contraseña:</label>
+            <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required>
 
             <label for="edad">Edad:</label>
             <input type="number" id="edad" name="edad" placeholder="Ej: 16" required>

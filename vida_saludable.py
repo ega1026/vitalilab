@@ -67,7 +67,6 @@ class MiManejador(SimpleHTTPRequestHandler):
             if usuario:
                 # Si las credenciales son correctas, redirigimos a completar datos inyectando el correo con script en cliente
                 self.send_response(303)
-                # Creamos una pequeña respuesta que guarde en localStorage y redirija
                 self.send_header('Content-Type', 'text/html; charset=utf-8')
                 self.end_headers()
                 html_redirect = f"""
