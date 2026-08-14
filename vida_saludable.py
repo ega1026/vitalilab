@@ -3,6 +3,9 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 import urllib.parse
 import os
 
+# Contraseña para acceder al panel de admin
+CLAVE_ADMIN = "admin123"
+
 def inicializar_base_datos():
     conexion = sqlite3.connect("vida_saludable.db")
     cursor = conexion.cursor()
@@ -17,13 +20,126 @@ def inicializar_base_datos():
             vasos_agua INTEGER DEFAULT 0,
             peso REAL DEFAULT 0,
             altura REAL DEFAULT 0,
-            imc REAL DEFAULT 0
+            imc REAL DEFAULT 0,
+            fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     """)
     conexion.commit()
     conexion.close()
 
 class MiManejador(SimpleHTTPRequestHandler):
+
+    def do_GET(self):
+        # RUTA DEL PANEL DE ADMINISTRADOR
+        if self.path.startswith('/admin'):
+            query = urllib.parse.urlparse(self.path).query
+            params = urllib.parse.parse_qs(query)
+            clave = params.get('clave', [''])[0]
+
+            # Verificación de clave
+            if clave != CLAVE_ADMIN:
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                html_login_admin = """
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Admin Login - VitaliLab</title>
+                    <link rel="stylesheet" href="style.css">
+                </head>
+                <body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1e1e1e; color:white;">
+                    <div style="background:#2b2b2b; padding:30px; border-radius:10px; width:300px; text-align:center;">
+                        <h2>Panel de Admin</h2>
+                        <form method="GET" action="/admin">
+                            <input type="password" name="clave" placeholder="Contraseña de Admin" style="margin-bottom:15px;" required>
+                            <button type="submit" class="btn-verde">Ingresar</button>
+                        </form>
+                    </div>
+                </body>
+                </html>
+                """
+                self.wfile.write(html_login_admin.encode('utf-8'))
+                return
+
+            # Si la clave es correcta, consultamos los usuarios
+            conexion = sqlite3.connect("vida_saludable.db")
+            cursor = conexion.cursor()
+            cursor.execute("SELECT id, nombre, correo, edad, grado, peso, altura, imc, vasos_agua, fecha_registro FROM perfiles ORDER BY id DESC")
+            usuarios = cursor.fetchall()
+            conexion.close()
+
+            # Construcción de la tabla en HTML
+            filas = ""
+            for u in usuarios:
+                filas += f"""
+                <tr>
+                    <td>{u[0]}</td>
+                    <td><b>{u[1]}</b></td>
+                    <td>{u[2]}</td>
+                    <td>{u[3] if u[3] else '-'}</td>
+                    <td>{u[4] if u[4] else '-'}</td>
+                    <td>{u[5]} kg</td>
+                    <td>{u[6]} cm</td>
+                    <td>{u[7]}</td>
+                    <td>{u[8]} vasos</td>
+                    <td>{u[9]}</td>
+                </tr>
+                """
+
+            html_admin = f"""
+            <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <title>Panel de Administración - VitaliLab</title>
+                <link rel="stylesheet" href="style.css">
+                <style>
+                    table {{ width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }}
+                    th, td {{ padding: 12px; border: 1px solid #ddd; text-align: center; font-size: 14px; }}
+                    th {{ background-color: #2ecc71; color: white; }}
+                    tr:nth-child(even) {{ background-color: #f9f9f9; }}
+                </style>
+            </head>
+            <body style="padding: 20px; background-color: #f4f7f6;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h1>Panel de Control de Usuarios (Admin)</h1>
+                    <a href="/index.html" class="btn btn-verde" style="width:auto; padding:8px 15px;">Ir a la Web</a>
+                </div>
+                <p>Total de usuarios registrados: <b>{len(usuarios)}</b></p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Edad</th>
+                            <th>Grado</th>
+                            <th>Peso</th>
+                            <th>Altura</th>
+                            <th>IMC</th>
+                            <th>Agua (Hoy)</th>
+                            <th>Fecha Registro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filas if filas else '<tr><td colspan="10">No hay usuarios registrados aún.</td></tr>'}
+                    </tbody>
+                </table>
+            </body>
+            </html>
+            """
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(html_admin.encode('utf-8'))
+            return
+
+        # Para cualquier otra ruta, usar el comportamiento estándar
+        super().do_GET()
+
     def do_POST(self):
         longitud = int(self.headers['Content-Length'])
         datos_post = self.rfile.read(longitud).decode('utf-8')
@@ -44,7 +160,6 @@ class MiManejador(SimpleHTTPRequestHandler):
                 conexion.commit()
                 conexion.close()
                 
-                # Redirigir al login despues de registrarse
                 self.send_response(303)
                 self.send_header('Location', '/login.html')
                 self.end_headers()
@@ -65,7 +180,6 @@ class MiManejador(SimpleHTTPRequestHandler):
             conexion.close()
 
             if usuario:
-                # Si las credenciales son correctas, redirigimos a completar datos inyectando el correo con script en cliente
                 self.send_response(303)
                 self.send_header('Content-Type', 'text/html; charset=utf-8')
                 self.end_headers()
@@ -106,7 +220,6 @@ class MiManejador(SimpleHTTPRequestHandler):
                 conexion.commit()
                 conexion.close()
                 
-                # Al terminar de completar el perfil, vamos al index o panel principal
                 self.send_response(303)
                 self.send_header('Location', '/index.html')
                 self.end_headers()

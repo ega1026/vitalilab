@@ -15,13 +15,14 @@ def crear_base_datos():
             vasos_agua INTEGER DEFAULT 0,
             peso REAL DEFAULT 0,
             altura REAL DEFAULT 0,
-            imc REAL DEFAULT 0
+            imc REAL DEFAULT 0,
+            fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     """)
     
     conexion.commit()
     conexion.close()
-    print("Base de datos y tabla perfiles creadas correctamente.")
+    print("Base de datos actualizada con campo de fecha.")
 
 if __name__ == "__main__":
     crear_base_datos()

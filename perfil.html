@@ -4,69 +4,44 @@
     <meta charset="UTF-8">   
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="logovitalilab.png" type="image/png">
-    <title>Mi Perfil - VitaliLab</title>
+    <title>Registro - VitaliLab</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- ENCABEZADO -->
     <header>
-        <div class="logo"> VitaliLab</div>
+        <div class="logo">VitaliLab</div>
         <nav>
           <a href="index.html">Inicio</a>
-          <a href="perfil.html" class="activo">Mi Perfil</a>
+          <a href="perfil.html" class="activo">Registrarse</a>
           <a href="login.html">Ingresar</a>
         </nav>
     </header>
 
     <div class="contenedor">
-        <h1>Registro de Perfil</h1>
-        <p>Ingresa tus datos y tu correo (personal o institucional) para guardar tu perfil en el sistema.</p>
+        <h1>Crear Cuenta</h1>
+        <p>Regístrate para empezar a llevar el control de tus hábitos saludables.</p>
 
         <form action="/registrar_usuario" method="POST">
             
-            <h3>Datos del estudiante</h3>
-
             <label for="nombre">Nombre completo:</label>
             <input type="text" id="nombre" name="nombre" placeholder="Ej: Laura Martínez" required>
 
-            <label for="correo">Correo electrónico (Personal o Institucional):</label>
+            <label for="correo">Correo electrónico:</label>
             <input type="email" id="correo" name="correo" placeholder="Ej: estudiante@institucion.edu.co" required>
             
-            <label for="contrasena">Crea una contraseña:</label>
+            <label for="contrasena">Contraseña:</label>
             <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required>
 
-            <label for="edad">Edad:</label>
-            <input type="number" id="edad" name="edad" placeholder="Ej: 16" required>
-
-            <label for="grado">Grado:</label>
-            <select id="grado" name="grado" required>
-                <option value="">Seleccionar...</option>
-                <option value="6">Sexto</option>
-                <option value="7">Séptimo</option>
-                <option value="8">Octavo</option>
-                <option value="9">Noveno</option>
-                <option value="10">Décimo</option>
-                <option value="11">Once</option>
-            </select>
-
-            <h3>Medidas biométricas</h3>
-
-            <label for="peso">Peso (en kilogramos):</label>
-            <input type="number" step="0.1" id="peso" name="peso" placeholder="Ej: 60.5" required>
-
-            <label for="altura">Altura (en centímetros):</label>
-            <input type="number" id="altura" name="altura" placeholder="Ej: 170" required>
-
-            <h3>Hidratación diaria</h3>
-
-            <label for="vasos">¿Cuántos vasos de agua has tomado hoy?</label>
-            <input type="number" id="vasos" name="vasos" placeholder="Ej: 6" required>
-
-            <br>
-            <button type="submit" class="btn-verde">Guardar perfil</button>
+            <br><br>
+            <button type="submit" class="btn-verde">Crear cuenta</button>
 
         </form>
+
+        <p style="text-align: center; margin-top: 20px; font-size: 14px;">
+            ¿Ya tienes una cuenta? <a href="login.html" style="color: #3498db; font-weight: bold; text-decoration: none;">Inicia sesión aquí</a>
+        </p>
     </div>
 
 </body>
