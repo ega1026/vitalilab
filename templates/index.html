@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitaliLab - Proyecto Vida Saludable</title>
+    <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
     <!-- CSS Principal -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -20,46 +21,70 @@
         </div>
         <nav>
             <a href="{{ url_for('index') }}" class="active"><i class="fa-solid fa-house"></i> Inicio</a>
+            <a href="#imc-info"><i class="fa-solid fa-calculator"></i> ¿Qué es el IMC?</a>
+            <a href="#cuidarte"><i class="fa-solid fa-heart-pulse"></i> ¿Por qué cuidarte?</a>
+            <a href="#fundamentos"><i class="fa-solid fa-book-medical"></i> ¿En qué se basa?</a>
             <a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> Guardar / Ingresar</a>
         </nav>
     </header>
 
     <main class="container">
-        <section class="card-welcome" style="text-align: center; padding: 30px 20px;">
-            <h2><i class="fa-solid fa-heart-pulse" style="color: #28a745;"></i> ¡Bienvenido a VitaliLab!</h2>
-            <p style="font-size: 1.1rem; margin-top: 10px; color: #444;">Explora y prueba todas las herramientas de salud libremente sin necesidad de registrarte[cite: 3].</p>
+        <section class="card-welcome">
+            <h2><i class="fa-solid fa-heart-pulse" style="color: #10b981;"></i> ¡Bienvenido a VitaliLab!</h2>
+            <p>Combatimos el sedentarismo en nuestra comunidad educativa para alcanzar el éxito integral de cada estudiante. Explora y prueba todas las herramientas libremente sin necesidad de registrarte, o crea tu perfil para guardar tus avances.</p>
+            <div style="margin-top: 20px;">
+                <a href="{{ url_for('login') }}" class="btn-success" style="text-decoration: none; width: auto; display: inline-flex;"><i class="fa-solid fa-user-plus"></i> Crear Perfil o Ingresar</a>
+            </div>
         </section>
 
         <div class="dashboard-grid">
             <!-- Calculadora de IMC Interactiva (Sin Login) -->
             <div class="card">
-                <h3><i class="fa-solid fa-calculator" style="color: #28a745;"></i> Calculadora de IMC</h3>
+                <h3><i class="fa-solid fa-calculator" style="color: #0ea5e9;"></i> Calculadora de IMC</h3>
                 <p>Prueba tu índice de masa corporal al instante:</p>
                 <div class="form-group" style="margin: 10px 0; text-align: left;">
                     <label style="font-size: 0.9rem; font-weight: bold;">Peso (kg):</label>
-                    <input type="number" id="peso-home" step="0.1" placeholder="Ej. 60" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; box-sizing:border-box;">
+                    <input type="number" id="peso-home" step="0.1" placeholder="Ej. 60">
                 </div>
                 <div class="form-group" style="margin-bottom: 15px; text-align: left;">
                     <label style="font-size: 0.9rem; font-weight: bold;">Altura (m):</label>
-                    <input type="number" id="altura-home" step="0.01" placeholder="Ej. 1.70" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; box-sizing:border-box;">
+                    <input type="number" id="altura-home" step="0.01" placeholder="Ej. 1.70">
                 </div>
-                <button class="btn-primary" onclick="calcularIMCHome()" style="background-color: #28a745;"><i class="fa-solid fa-heart-pulse"></i> Calcular IMC</button>
+                <button class="btn-primary" onclick="calcularIMCHome()"><i class="fa-solid fa-heart-pulse"></i> Calcular IMC</button>
             </div>
 
             <!-- Control de Hidratación Interactivo (Sin Login) -->
             <div class="card">
-                <h3><i class="fa-solid fa-droplet" style="color: #007bff;"></i> Control de Hidratación</h3>
-                <p>Simula el consumo de vasos de agua[cite: 3]:</p>
-                <p style="margin: 20px 0; font-size: 1.2rem;">Vasos de prueba: <span id="contador-agua-home" style="font-weight: bold; color: #007bff;">0</span></p>
+                <h3><i class="fa-solid fa-droplet" style="color: #0ea5e9;"></i> Control de Hidratación</h3>
+                <p>Simula el consumo diario de vasos de agua:</p>
+                <p style="margin: 20px 0; font-size: 1.3rem;">Vasos de prueba: <span id="contador-agua-home" style="font-weight: bold; color: #0ea5e9;">0</span></p>
                 <button class="btn-primary" onclick="registrarAguaHome()"><i class="fa-solid fa-plus"></i> Registrar Vaso</button>
             </div>
 
             <!-- Pausas Activas y Tips (Sin Login) -->
             <div class="card">
-                <h3><i class="fa-solid fa-person-running" style="color: #ffc107;"></i> Pausas Activas</h3>
-                <p>Consejo rápido para evitar el sedentarismo[cite: 2]:</p>
-                <p style="font-style: italic; color: #555; margin: 15px 0;">"Estira tus brazos y piernas durante 3 minutos cada hora de estudio."</p>
-                <button class="btn-primary" style="background-color: #ffc107; color: #333;" onclick="mostrarTip()"><i class="fa-solid fa-lightbulb"></i> Ver Tip Extra</button>
+                <h3><i class="fa-solid fa-person-running" style="color: #f59e0b;"></i> Pausas Activas</h3>
+                <p>Consejo rápido para evitar el sedentarismo:</p>
+                <p style="font-style: italic; color: #64748b; margin: 15px 0;">"Estira tus brazos y piernas durante 3 minutos cada hora de estudio."</p>
+                <button class="btn-success" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="mostrarTip()"><i class="fa-solid fa-lightbulb"></i> Ver Tip Extra</button>
+            </div>
+        </div>
+
+        <!-- Secciones Informativas Nuevas -->
+        <div class="dashboard-grid" style="margin-top: 30px;">
+            <div class="card" id="imc-info">
+                <h3><i class="fa-solid fa-circle-question" style="color: #0ea5e9;"></i> ¿Qué es el IMC?</h3>
+                <p style="color: #64748b; line-height: 1.6; margin-top: 10px;">El <strong>Índice de Masa Corporal (IMC)</strong> es un indicador que relaciona tu peso y tu altura para determinar de forma orientativa si te encuentras en un rango de peso saludable, bajo peso o sobrepeso.</p>
+            </div>
+
+            <div class="card" id="cuidarte">
+                <h3><i class="fa-solid fa-shield-heart" style="color: #10b981;"></i> ¿Por qué deberías cuidarte?</h3>
+                <p style="color: #64748b; line-height: 1.6; margin-top: 10px;">Mantener una rutina activa y una buena hidratación previene el sedentarismo escolar, mejora notablemente tu concentración en clases, eleva tus niveles de energía y fortalece tu salud integral a largo plazo.</p>
+            </div>
+
+            <div class="card" id="fundamentos">
+                <h3><i class="fa-solid fa-graduation-cap" style="color: #f59e0b;"></i> ¿En qué se basa?</h3>
+                <p style="color: #64748b; line-height: 1.6; margin-top: 10px;">VitaliLab se apoya en directrices de salud pública y bienestar escolar, combinando herramientas digitales interactivas construidas con Flask y SQLite para fomentar hábitos de vida saludables.</p>
             </div>
         </div>
     </main>
@@ -80,11 +105,11 @@
         function registrarAguaHome() {
             let contador = document.getElementById('contador-agua-home');
             contador.innerText = parseInt(contador.innerText) + 1;
-            Swal.fire('¡Vaso sumado!', 'Mantenerte hidratado mejora tu concentración.', 'success');
+            Swal.fire('¡Vaso sumado!', 'Mantenerte hidratado mejora tu rendimiento y concentración.', 'success');
         }
 
         function mostrarTip() {
-            Swal.fire('Tip de Bienestar', 'Bebe al menos 2 litros de agua al día y realiza pausas activas constantes.', 'info');
+            Swal.fire('Tip de Bienestar', 'Bebe al menos 2 litros de agua al día y realiza pausas activas constantes para cuidar tu postura.', 'info');
         }
     </script>
 </body>
