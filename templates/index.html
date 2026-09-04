@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitaliLab - Proyecto Vida Saludable</title>
     <!-- CSS Principal -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') if url_for else 'style.css' }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 para alertas interactivas -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header class="navbar">
@@ -17,36 +19,72 @@
         </div>
         <nav>
             <a href="{{ url_for('index') }}" class="active"><i class="fa-solid fa-house"></i> Inicio</a>
-            <a href="{{ url_for('perfil') }}"><i class="fa-solid fa-user"></i> Perfil</a>
-            <a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> Ingresar</a>
+            <a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> Guardar / Ingresar</a>
         </nav>
     </header>
 
     <main class="container">
-        <section class="card-welcome" style="text-align: center; padding: 40px 20px;">
-            <h2><i class="fa-solid fa-heart-pulse" style="color: #28a745;"></i> VitaliLab Proyecto Vida Saludable</h2>
-            <p style="font-size: 1.1rem; margin-top: 15px; color: #444;">Combatimos el sedentarismo en nuestra comunidad educativa para alcanzar el éxito integral de cada estudiante[cite: 3].</p>
-            <div style="margin-top: 25px;">
-                <a href="{{ url_for('login') }}" class="btn-primary" style="text-decoration: none; display: inline-block; padding: 10px 20px;"><i class="fa-solid fa-user-plus"></i> Crear mi perfil / Ingresar</a>
-            </div>
+        <section class="card-welcome" style="text-align: center; padding: 30px 20px;">
+            <h2><i class="fa-solid fa-heart-pulse" style="color: #28a745;"></i> ¡Bienvenido a VitaliLab!</h2>
+            <p style="font-size: 1.1rem; margin-top: 10px; color: #444;">Explora y prueba todas las herramientas de salud libremente sin necesidad de registrarte[cite: 3].</p>
         </section>
 
-        <div class="dashboard-grid" style="margin-top: 30px;">
+        <div class="dashboard-grid">
+            <!-- Calculadora de IMC Interactiva (Sin Login) -->
             <div class="card">
-                <h3><i class="fa-solid fa-circle-question" style="color: #007bff;"></i> ¿Qué es este proyecto?</h3>
-                <p style="margin-top: 10px; color: #555;">Una plataforma sencilla para que los estudiantes registren su actividad física y sus hábitos de hidratación diaria de manera interactiva[cite: 3].</p>
+                <h3><i class="fa-solid fa-calculator" style="color: #28a745;"></i> Calculadora de IMC</h3>
+                <p>Prueba tu índice de masa corporal al instante:</p>
+                <div class="form-group" style="margin: 10px 0; text-align: left;">
+                    <label style="font-size: 0.9rem; font-weight: bold;">Peso (kg):</label>
+                    <input type="number" id="peso-home" step="0.1" placeholder="Ej. 60" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; box-sizing:border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+                    <label style="font-size: 0.9rem; font-weight: bold;">Altura (m):</label>
+                    <input type="number" id="altura-home" step="0.01" placeholder="Ej. 1.70" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; box-sizing:border-box;">
+                </div>
+                <button class="btn-primary" onclick="calcularIMCHome()" style="background-color: #28a745;"><i class="fa-solid fa-heart-pulse"></i> Calcular IMC</button>
             </div>
 
+            <!-- Control de Hidratación Interactivo (Sin Login) -->
             <div class="card">
-                <h3><i class="fa-solid fa-id-card" style="color: #ffc107;"></i> Mi Perfil</h3>
-                <p style="margin-top: 10px; color: #555;">Registra tu nombre, edad y grado para calcular automáticamente tus indicadores clave[cite: 3] como el IMC y calorías.</p>
+                <h3><i class="fa-solid fa-droplet" style="color: #007bff;"></i> Control de Hidratación</h3>
+                <p>Simula el consumo de vasos de agua[cite: 3]:</p>
+                <p style="margin: 20px 0; font-size: 1.2rem;">Vasos de prueba: <span id="contador-agua-home" style="font-weight: bold; color: #007bff;">0</span></p>
+                <button class="btn-primary" onclick="registrarAguaHome()"><i class="fa-solid fa-plus"></i> Registrar Vaso</button>
             </div>
 
+            <!-- Pausas Activas y Tips (Sin Login) -->
             <div class="card">
-                <h3><i class="fa-solid fa-droplet" style="color: #17a2b8;"></i> Hidratación</h3>
-                <p style="margin-top: 10px; color: #555;">Lleva el conteo de tus vasos de agua diarios y mantén un estilo de vida saludable[cite: 3] óptimo para tu rendimiento escolar.</p>
+                <h3><i class="fa-solid fa-person-running" style="color: #ffc107;"></i> Pausas Activas</h3>
+                <p>Consejo rápido para evitar el sedentarismo[cite: 2]:</p>
+                <p style="font-style: italic; color: #555; margin: 15px 0;">"Estira tus brazos y piernas durante 3 minutos cada hora de estudio."</p>
+                <button class="btn-primary" style="background-color: #ffc107; color: #333;" onclick="mostrarTip()"><i class="fa-solid fa-lightbulb"></i> Ver Tip Extra</button>
             </div>
         </div>
     </main>
+
+    <script>
+        function calcularIMCHome() {
+            let peso = parseFloat(document.getElementById('peso-home').value);
+            let altura = parseFloat(document.getElementById('altura-home').value);
+            if (!peso || !altura || peso <= 0 || altura <= 0) {
+                Swal.fire('Datos incorrectos', 'Ingresa un peso y altura válidos.', 'error');
+                return;
+            }
+            let imc = peso / (altura * altura);
+            let mensaje = imc < 18.5 ? 'Peso bajo' : imc < 25 ? 'Peso saludable' : 'Sobrepeso';
+            Swal.fire('Tu IMC es ' + imc.toFixed(2), 'Clasificación orientativa: ' + mensaje, 'success');
+        }
+
+        function registrarAguaHome() {
+            let contador = document.getElementById('contador-agua-home');
+            contador.innerText = parseInt(contador.innerText) + 1;
+            Swal.fire('¡Vaso sumado!', 'Mantenerte hidratado mejora tu concentración.', 'success');
+        }
+
+        function mostrarTip() {
+            Swal.fire('Tip de Bienestar', 'Bebe al menos 2 litros de agua al día y realiza pausas activas constantes.', 'info');
+        }
+    </script>
 </body>
 </html>
