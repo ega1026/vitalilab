@@ -1,50 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="logovitalilab.png" type="image/png">
-  <title>Iniciar Sesion – VitaliLab</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaliLab - Iniciar Sesión</title>
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') if url_for else 'style.css' }}">
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-  <div class="login-pagina">
-    <div class="login-caja">
-
-      <div class="login-logo">VitaliLab</div>
-
-      <h1 style="font-size: 24px; text-align: center; margin-top: 0;">Iniciar sesion</h1>
-      <p style="text-align: center; margin-bottom: 20px;">Ingresa tus datos para acceder al sistema.</p>
-
-      <div class="error-msg" id="error-msg">
-        Usuario o contraseña incorrectos.
-      </div>
-      <div class="exito-msg" id="exito-msg">
-        ¡Bienvenido/a! Redirigiendo…
-      </div>
-
-      <form action="/verificar_login" method="POST">
-        <div class="campo-grupo">
-          <label for="correo">Correo electronico</label>
-          <input type="email" id="correo" name="correo" placeholder="Ej: correo@institucion.edu.co" required />
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" class="logo-img">
+            <h1>VitaliLab</h1>
         </div>
+        <nav>
+            <a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> Inicio</a>
+            <a href="{{ url_for('login') }}" class="active"><i class="fa-solid fa-right-to-bracket"></i> Ingresar</a>
+        </nav>
+    </header>
 
-        <div class="campo-grupo" style="margin-top: 15px;">
-          <label for="contrasena">Contrasena</label>
-          <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required />
+    <main class="container">
+        <div class="card" style="max-width: 400px; margin: 40px auto; text-align: center;">
+            <h2><i class="fa-solid fa-user-lock" style="color: #007bff;"></i> Iniciar Sesión</h2>
+            <p style="margin-bottom: 20px; color: #555;">Ingresa tu nombre de usuario para acceder a tu perfil de salud.</p>
+            
+            {% if error %}
+            <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 0.9rem;">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+                    <label for="nombre" style="font-weight: bold; font-size: 0.9rem;"><i class="fa-solid fa-user"></i> Nombre de Usuario:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan Pérez" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 10px; cursor: pointer;"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+            </form>
         </div>
-
-        <br>
-        <button type="submit" class="btn-verde">Ingresar</button>
-      </form>
-
-      <p class="login-registro">
-        ¿No tienes cuenta? <a href="perfil.html">Registrate aquí</a> | <a href="index.html">Volver al inicio</a>
-      </p>
-
-    </div>
-  </div>
-
+    </main>
 </body>
 </html>
