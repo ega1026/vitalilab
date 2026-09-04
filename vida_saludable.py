@@ -14,6 +14,18 @@ def conectar_db():
 def index():
     return render_template('index.html')
 
+@app.route('/imc-info')
+def imc_page():
+    return render_template('imc_info.html')
+
+@app.route('/cuidarte-info')
+def cuidarte_page():
+    return render_template('cuidarte_info.html')
+
+@app.route('/fundamentos-info')
+def fundamentos_page():
+    return render_template('fundamentos_info.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None

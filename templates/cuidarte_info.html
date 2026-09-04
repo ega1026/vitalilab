@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VitaliLab - ¿Por qué cuidarte?</title>
+    <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo" class="logo-img">
+            <h1>VitaliLab</h1>
+        </div>
+        <nav><a href="{{ url_for('index') }}"><i class="fa-solid fa-arrow-left"></i> Volver al Inicio</a></nav>
+    </header>
+    <main class="container">
+        <section class="card" style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <h2><i class="fa-solid fa-shield-heart" style="color: #10b981;"></i> ¿Por qué deberías cuidarte?</h2>
+            <p style="margin-top: 15px; line-height: 1.7;">El cuerpo humano está diseñado para el movimiento. El sedentarismo prolongado afecta negativamente la salud física y mental de los estudiantes.</p>
+            <h3 style="margin-top: 20px;">Beneficios clave de mantener hábitos activos:</h3>
+            <ul style="line-height: 1.8; margin-left: 20px; margin-top: 10px;">
+                <li><strong>Mayor concentración:</strong> El ejercicio oxigena el cerebro, mejorando la retención de conocimientos.</li>
+                <li><strong>Reducción del estrés:</strong> Libera endorfinas que contrarrestan la ansiedad escolar.</li>
+                <li><strong>Salud postural:</strong> Evita dolores musculares crónicos causados por largas horas sentados.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

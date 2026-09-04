@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VitaliLab - Fundamentos</title>
+    <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo" class="logo-img">
+            <h1>VitaliLab</h1>
+        </div>
+        <nav><a href="{{ url_for('index') }}"><i class="fa-solid fa-arrow-left"></i> Volver al Inicio</a></nav>
+    </header>
+    <main class="container">
+        <section class="card" style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <h2><i class="fa-solid fa-graduation-cap" style="color: #f59e0b;"></i> ¿En qué se basa VitaliLab?</h2>
+            <p style="margin-top: 15px; line-height: 1.7;">VitaliLab integra la tecnología con la promoción de la salud escolar basándose en lineamientos de organizaciones internacionales de bienestar y educación física.</p>
+            <h3 style="margin-top: 20px;">Arquitectura Tecnológica:</h3>
+            <ul style="line-height: 1.8; margin-left: 20px; margin-top: 10px;">
+                <li><strong>Flask (Python):</strong> Framework web ligero y robusto para el control de rutas del servidor.</li>
+                <li><strong>SQLite:</strong> Base de datos embebida para almacenar de forma segura los perfiles y registros.</li>
+                <li><strong>Frontend Moderno:</strong> Estilos adaptativos con soporte para iconos de FontAwesome y alertas dinámicas.</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

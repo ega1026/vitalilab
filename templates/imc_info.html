@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>VitaliLab - ¿Qué es el IMC?</title>
+    <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo" class="logo-img">
+            <h1>VitaliLab</h1>
+        </div>
+        <nav><a href="{{ url_for('index') }}"><i class="fa-solid fa-arrow-left"></i> Volver al Inicio</a></nav>
+    </header>
+    <main class="container">
+        <section class="card" style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <h2><i class="fa-solid fa-calculator" style="color: #0ea5e9;"></i> Guía Completa: ¿Qué es el IMC?</h2>
+            <p style="margin-top: 15px; line-height: 1.7;">El <strong>Índice de Masa Corporal (IMC)</strong> es una medida de asociación entre el peso y la talla de una persona. Ideada por el estadístico belga Adolphe Quetelet, es un estándar internacional utilizado para identificar riesgos nutricionales.</p>
+            <h3 style="margin-top: 20px;">Rangos de Clasificación Oficiales:</h3>
+            <ul style="line-height: 1.8; margin-left: 20px; margin-top: 10px;">
+                <li><strong>Menor a 18.5:</strong> Peso inferior al normal (Requiere evaluación nutricional).</li>
+                <li><strong>18.5 – 24.9:</strong> Rango de Peso Saludable (Ideal para el rendimiento físico).</li>
+                <li><strong>25.0 – 29.9:</strong> Sobrepeso (Se aconseja incrementar actividad física).</li>
+                <li><strong>Más de 30.0:</strong> Obesidad (Requiere asesoramiento médico especializado).</li>
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
