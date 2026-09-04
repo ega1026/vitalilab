@@ -16,8 +16,9 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
     if request.method == 'POST':
-        nombre_usuario = request.form['nombre']
+        nombre_usuario = request.form['nombre'].strip()
         conexion = conectar_db()
         cursor = conexion.cursor()
         cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre_usuario,))
@@ -28,9 +29,38 @@ def login():
             session['usuario_id'] = usuario['id']
             return redirect(url_for('perfil'))
         else:
-            return render_template('login.html', error="Usuario no encontrado")
+            error = "Usuario no encontrado. Puedes registrarte abajo."
             
-    return render_template('login.html')
+    return render_template('login.html', error=error)
+
+@app.route('/registro', methods=['POST'])
+def registro():
+    nombre_usuario = request.form.get('nombre', '').strip()
+    edad = request.form.get('edad', 15)
+    grado = request.form.get('grado', 'General')
+    
+    if not nombre_usuario:
+        return render_template('login.html', error="El nombre de usuario no puede estar vacío.")
+        
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    try:
+        cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre_usuario,))
+        existente = cursor.fetchone()
+        if existente:
+            conexion.close()
+            return render_template('login.html', error="El usuario ya existe. Inicia sesión.")
+            
+        cursor.execute("INSERT INTO usuarios (nombre, edad, grado, agua) VALUES (?, ?, ?, 0)", (nombre_usuario, edad, grado))
+        conexion.commit()
+        nuevo_id = cursor.lastrowid
+        conexion.close()
+        
+        session['usuario_id'] = nuevo_id
+        return redirect(url_for('perfil'))
+    except Exception as e:
+        conexion.close()
+        return render_template('login.html', error=f"Error al registrar: {str(e)}")
 
 @app.route('/perfil')
 def perfil():
