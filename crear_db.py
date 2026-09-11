@@ -4,33 +4,31 @@ def inicializar_bd():
     conexion = sqlite3.connect('vida_saludable.db')
     cursor = conexion.cursor()
     
+    # Eliminamos la tabla anterior para evitar conflictos
+    cursor.execute('DROP TABLE IF EXISTS usuarios')
+    
+    # Creamos la tabla completa compatible con tu perfil y comunidad
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS usuarios (
+        CREATE TABLE usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL UNIQUE,
-            edad INTEGER,
-            grado TEXT,
-            agua INTEGER DEFAULT 0,
+            nombre TEXT NOT NULL,
+            correo TEXT UNIQUE NOT NULL,
+            contrasena TEXT NOT NULL,
+            edad INTEGER DEFAULT 0,
+            grado TEXT DEFAULT 'Comunidad General',
+            vasos_agua INTEGER DEFAULT 0,
+            peso REAL DEFAULT 0,
+            altura REAL DEFAULT 0,
+            imc REAL DEFAULT 0,
             racha INTEGER DEFAULT 0,
-            puntos INTEGER DEFAULT 0
-        )
-    ''')
-
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS retos_diarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            usuario_id INTEGER,
-            fecha TEXT,
-            agua_cumplida BOOLEAN DEFAULT 0,
-            dormir_cumplido BOOLEAN DEFAULT 0,
-            entrenamiento_cumplido BOOLEAN DEFAULT 0,
-            FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+            puntos INTEGER DEFAULT 0,
+            fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
     
     conexion.commit()
     conexion.close()
-    print("Base de datos creada y actualizada con éxito.")
+    print("¡Base de datos creada y optimizada correctamente!")
 
 if __name__ == '__main__':
     inicializar_bd()

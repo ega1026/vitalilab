@@ -3,71 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaliLab - Acceso y Registro</title>
-    <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
+    <title>Ingresar - VitaliLab</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header class="navbar">
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" class="logo-img">
-            <h1>VitaliLab</h1>
+    <div class="container" style="max-width: 500px; margin-top: 50px;">
+        
+        {% if error %}
+        <div style="background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+            {{ error }}
         </div>
-        <nav>
-            <a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> Inicio</a>
-            <a href="{{ url_for('login') }}" class="active"><i class="fa-solid fa-right-to-bracket"></i> Acceso</a>
-        </nav>
-    </header>
+        {% endif %}
 
-    <main class="container">
-        <div class="auth-grid">
-            <!-- Tarjeta de Inicio de Sesión -->
-            <div class="card auth-card">
-                <div class="card-icon login-icon"><i class="fa-solid fa-user-lock"></i></div>
-                <h2>Iniciar Sesión</h2>
-                <p>Si ya tienes una cuenta registrada, ingresa con tu nombre:</p>
-                
-                {% if error and 'encontrado' in error %}
-                <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</div>
-                {% endif %}
-
-                <form method="POST" action="{{ url_for('login') }}">
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-user"></i> Nombre de Usuario:</label>
-                        <input type="text" name="nombre" required placeholder="Ej. Juan Pérez">
-                    </div>
-                    <button type="submit" class="btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
-                </form>
-            </div>
-
-            <!-- Tarjeta de Registro de Nuevo Perfil -->
-            <div class="card auth-card">
-                <div class="card-icon register-icon"><i class="fa-solid fa-user-plus"></i></div>
-                <h2>Crear Nuevo Perfil</h2>
-                <p>¿Nuevo en VitaliLab? Regístrate en segundos:</p>
-
-                {% if error and 'registrar' in error %}
-                <div class="alert-error"><i class="fa-solid fa-triangle-exclamation"></i> {{ error }}</div>
-                {% endif %}
-
-                <form method="POST" action="{{ url_for('registro') }}">
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-user-pen"></i> Nombre:</label>
-                        <input type="text" name="nombre" required placeholder="Tu nombre completo">
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-cake-candles"></i> Edad:</label>
-                        <input type="number" name="edad" required placeholder="Ej. 16" min="5" max="100">
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fa-solid fa-graduation-cap"></i> Grado / Grupo:</label>
-                        <input type="text" name="grado" required placeholder="Ej. 5° Semestre A">
-                    </div>
-                    <button type="submit" class="btn-success"><i class="fa-solid fa-user-check"></i> Registrarse y Entrar</button>
-                </form>
-            </div>
+        <!-- Formulario de Inicio de Sesión -->
+        <div class="card" style="margin-bottom: 20px;">
+            <form action="{{ url_for('login') }}" method="POST">
+                <h3>Iniciar Sesión</h3>
+                <div class="form-group" style="margin: 15px 0;">
+                    <input type="email" name="correo" placeholder="Correo electrónico" required style="width: 100%; padding: 10px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="password" name="contrasena" placeholder="Contraseña" required style="width: 100%; padding: 10px;">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
+            </form>
         </div>
-    </main>
+
+        <!-- Formulario de Registro General -->
+        <div class="card">
+            <form action="{{ url_for('registro') }}" method="POST">
+                <h3>Únete a la Comunidad</h3>
+                <div class="form-group" style="margin: 15px 0;">
+                    <input type="text" name="nombre" placeholder="Nombre real o apodo de perfil" required style="width: 100%; padding: 10px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="email" name="correo" placeholder="Correo electrónico" required style="width: 100%; padding: 10px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="password" name="contrasena" placeholder="Crea una contraseña" required style="width: 100%; padding: 10px;">
+                </div>
+                <button type="submit" class="btn-success" style="width: 100%;">Registrarse</button>
+            </form>
+        </div>
+
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="{{ url_for('index') }}">← Volver al inicio</a>
+        </p>
+    </div>
 </body>
 </html>

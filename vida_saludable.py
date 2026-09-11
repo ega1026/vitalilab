@@ -1,6 +1,14 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
+import importlib
+
+flask_module = importlib.import_module('flask')
+Flask = flask_module.Flask
+render_template = flask_module.render_template
+request = flask_module.request
+redirect = flask_module.redirect
+url_for = flask_module.url_for
+session = flask_module.session
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_vitalilab'
@@ -24,53 +32,55 @@ def cuidarte_page():
 
 @app.route('/fundamentos-info')
 def fundamentos_page():
-    return render_template('fundamentos_info.html')
+    return render_template('fundamentos_page.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        nombre_usuario = request.form['nombre'].strip()
+        correo = request.form.get('correo', '').strip()
+        contrasena = request.form.get('contrasena', '').strip()
+        
         conexion = conectar_db()
         cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre_usuario,))
+        cursor.execute("SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?", (correo, contrasena))
         usuario = cursor.fetchone()
         conexion.close()
         
         if usuario:
             session['usuario_id'] = usuario['id']
-            # REDIRECCIÓN DIRECTA AL PERFIL / APARTADO DE METAS
             return redirect(url_for('perfil'))
         else:
-            error = "Usuario no encontrado. Puedes registrarte abajo."
+            error = "Correo o contraseña incorrectos."
             
     return render_template('login.html', error=error)
 
 @app.route('/registro', methods=['POST'])
 def registro():
-    nombre_usuario = request.form.get('nombre', '').strip()
-    edad = request.form.get('edad', 15)
-    grado = request.form.get('grado', 'General')
+    nombre = request.form.get('nombre', '').strip()
+    correo = request.form.get('correo', '').strip()
+    contrasena = request.form.get('contrasena', '').strip()
     
-    if not nombre_usuario:
-        return render_template('login.html', error="El nombre de usuario no puede estar vacío.")
+    if not nombre or not correo or not contrasena:
+        return render_template('login.html', error="Todos los campos son obligatorios.")
         
     conexion = conectar_db()
     cursor = conexion.cursor()
     try:
-        cursor.execute("SELECT * FROM usuarios WHERE nombre = ?", (nombre_usuario,))
-        existente = cursor.fetchone()
-        if existente:
+        cursor.execute("SELECT * FROM usuarios WHERE correo = ?", (correo,))
+        if cursor.fetchone():
             conexion.close()
-            return render_template('login.html', error="El usuario ya existe. Inicia sesión.")
+            return render_template('login.html', error="Este correo ya está registrado.")
             
-        cursor.execute("INSERT INTO usuarios (nombre, edad, grado, agua, racha, puntos) VALUES (?, ?, ?, 0, 0, 0)", (nombre_usuario, edad, grado))
+        cursor.execute('''
+            INSERT INTO usuarios (nombre, correo, contrasena, edad, grado, vasos_agua, racha, puntos) 
+            VALUES (?, ?, ?, 0, 'Comunidad General', 0, 0, 0)
+        ''', (nombre, correo, contrasena))
         conexion.commit()
         nuevo_id = cursor.lastrowid
         conexion.close()
         
         session['usuario_id'] = nuevo_id
-        # REDIRECCIÓN DIRECTA AL PERFIL TRAS REGISTRARSE
         return redirect(url_for('perfil'))
     except Exception as e:
         conexion.close()
@@ -113,7 +123,6 @@ def perfil():
     usuario = cursor.fetchone()
     conexion.close()
     
-    # Aquí es donde se renderiza el apartado bonito con las metas y el checklist
     return render_template('perfil.html', usuario=usuario)
 
 @app.route('/logout')

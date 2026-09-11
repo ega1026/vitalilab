@@ -3,130 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaliLab - Mi Panel y Metas</title>
-    <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
-    <!-- Tailwind CSS CDN para un diseño moderno e impecable -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Mi Panel - VitaliLab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
-
-    <!-- Navbar -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo" class="w-9 h-9 object-contain">
-                <h1 class="text-xl font-black text-emerald-600 tracking-wide">VitaliLab</h1>
-            </div>
-            <nav class="flex items-center space-x-6">
-                <a href="{{ url_for('index') }}" class="text-slate-600 hover:text-emerald-600 font-medium transition flex items-center gap-2"><i class="fa-solid fa-house"></i> Inicio</a>
-                <a href="{{ url_for('logout') }}" class="text-rose-500 hover:text-rose-700 font-medium transition flex items-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
-            </nav>
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo" class="logo-img">
+            <h1>VitaliLab</h1>
         </div>
+        <nav>
+            <a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> Inicio</a>
+            <a href="{{ url_for('logout') }}" style="color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+        </nav>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow">
-        <!-- Tarjeta de Bienvenida y Estadísticas Rápidas -->
-        <section class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 md:p-8 text-white shadow-lg mb-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
-                        <i class="fa-solid fa-user-check"></i> ¡Hola, {{ usuario.nombre }}!
-                    </h2>
-                    <p class="text-emerald-100 mt-2 text-sm md:text-base">Este es tu panel personal. Cada hábito que cumples hoy te acerca a una vida más activa y saludable.</p>
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-graduation-cap"></i> {{ usuario.grado }}
-                    </span>
-                    <span class="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-fire text-amber-300"></i> {{ usuario.racha }} días racha
-                    </span>
-                    <span class="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-star text-yellow-300"></i> {{ usuario.puntos }} pts
-                    </span>
-                </div>
-            </div>
+    <main class="container">
+        <!-- Tarjeta de Bienvenida de la Comunidad -->
+        <section class="card-welcome" style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+            <h2><i class="fa-solid fa-user-check"></i> ¡Hola, {{ usuario.nombre }}!</h2>
+            <p style="margin: 10px 0;">Bienvenido a tu espacio personal de bienestar en VitaliLab.</p>
+            <span style="background: rgba(255, 255, 255, 0.2); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
+                <i class="fa-solid fa-users"></i> Miembro de la Comunidad
+            </span>
         </section>
 
-        <!-- Sección de Metas Visuales -->
-        <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-chart-pie text-emerald-600"></i> Tu Progreso y Metas Diarias
-        </h3>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Meta de Agua -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
-                <div class="absolute top-0 left-0 right-0 h-1.5 bg-sky-500"></div>
-                <h4 class="font-bold text-slate-700">Meta de Agua</h4>
-                <p class="text-xs text-slate-400 mt-0.5">Objetivo: 2 Litros diarios</p>
-                
-                <!-- Barra circular simulada con Tailwind -->
-                <div class="my-4 relative w-24 h-24 rounded-full flex items-center justify-center bg-sky-50 border-4 border-sky-500 shadow-inner">
-                    <span class="text-xl font-extrabold text-sky-600">80%</span>
-                </div>
-                <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full"><i class="fa-solid fa-check"></i> En buen camino</span>
+        <!-- Estadísticas y Progreso -->
+        <div class="dashboard-grid">
+            <div class="card" style="text-align: center;">
+                <h3><i class="fa-solid fa-fire" style="color: #f59e0b;"></i> Racha Actual</h3>
+                <p style="font-size: 2rem; font-weight: bold; color: #f59e0b; margin: 15px 0;">{{ usuario.racha }} Días</p>
+                <p style="color: #64748b; font-size: 0.9rem;">¡Mantén el hábito diario!</p>
             </div>
 
-            <!-- Meta de Sueño -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
-                <div class="absolute top-0 left-0 right-0 h-1.5 bg-indigo-500"></div>
-                <h4 class="font-bold text-slate-700">Descanso Ideal</h4>
-                <p class="text-xs text-slate-400 mt-0.5">Objetivo: 8 horas</p>
-                
-                <div class="my-4 relative w-24 h-24 rounded-full flex items-center justify-center bg-indigo-50 border-4 border-indigo-500 shadow-inner">
-                    <span class="text-xl font-extrabold text-indigo-600">100%</span>
-                </div>
-                <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full"><i class="fa-solid fa-fire"></i> ¡Meta cumplida!</span>
-            </div>
-
-            <!-- Meta de Pausas Activas -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
-                <div class="absolute top-0 left-0 right-0 h-1.5 bg-amber-500"></div>
-                <h4 class="font-bold text-slate-700">Pausas Activas</h4>
-                <p class="text-xs text-slate-400 mt-0.5">Objetivo: 3 sesiones</p>
-                
-                <div class="my-4 relative w-24 h-24 rounded-full flex items-center justify-center bg-amber-50 border-4 border-amber-500 shadow-inner">
-                    <span class="text-xl font-extrabold text-amber-600">50%</span>
-                </div>
-                <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-3 py-1 rounded-full"><i class="fa-solid fa-bolt"></i> ¡Tú puedes!</span>
+            <div class="card" style="text-align: center;">
+                <h3><i class="fa-solid fa-star" style="color: #eab308;"></i> Puntos Vitales</h3>
+                <p style="font-size: 2rem; font-weight: bold; color: #eab308; margin: 15px 0;">{{ usuario.puntos }} XP</p>
+                <p style="color: #64748b; font-size: 0.9rem;">Acumula puntos completando tus retos.</p>
             </div>
         </div>
 
-        <!-- Checklist Interactivo -->
-        <section class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-            <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-list-check text-emerald-600"></i> Checklist de Retos Diarios
-            </h3>
-            <p class="text-sm text-slate-500 mb-6">Marca los retos que cumpliste hoy para sumar puntos y aumentar tu racha:</p>
+        <!-- Checklist de Retos Diarios -->
+        <section class="card" style="margin-top: 25px;">
+            <h3><i class="fa-solid fa-list-check" style="color: #10b981;"></i> Checklist de Retos Diarios</h3>
+            <p style="color: #64748b; margin-bottom: 20px;">Marca los hábitos que cumpliste hoy para sumar puntos y actualizar tu progreso:</p>
             
-            <form action="{{ url_for('actualizar_retos') }}" method="POST" class="space-y-4">
-                <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
-                    <input type="checkbox" name="agua" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 mr-3">
-                    <span class="font-medium text-slate-700">💧 Tomar 2 litros de agua</span>
-                </label>
-                
-                <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
-                    <input type="checkbox" name="dormir" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 mr-3">
-                    <span class="font-medium text-slate-700">😴 Dormir al menos 8 horas</span>
-                </label>
-                
-                <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
-                    <input type="checkbox" name="entrenamiento" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 mr-3">
-                    <span class="font-medium text-slate-700">🏃‍♂️ Cumplir con pausas activas o ejercicio</span>
-                </label>
-                
-                <button type="submit" class="w-full sm:w-auto mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar Mis Avances de Hoy
-                </button>
+            <form action="{{ url_for('actualizar_retos') }}" method="POST">
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 1.05rem; cursor: pointer;">
+                        <input type="checkbox" name="agua" value="1" style="transform: scale(1.2); margin-right: 8px;"> 💧 Beber al menos 2 litros de agua
+                    </label>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="font-size: 1.05rem; cursor: pointer;">
+                        <input type="checkbox" name="dormir" value="1" style="transform: scale(1.2); margin-right: 8px;"> 🛌 Dormir entre 7 y 8 horas
+                    </label>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 1.05rem; cursor: pointer;">
+                        <input type="checkbox" name="entrenamiento" value="1" style="transform: scale(1.2); margin-right: 8px;"> 🏃‍♂️ Realizar 15 minutos de pausas activas o caminata
+                    </label>
+                </div>
+                <button type="submit" class="btn-success"><i class="fa-solid fa-floppy-disk"></i> Guardar y Registrar Progreso</button>
             </form>
         </section>
     </main>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400 mt-8">
-        VitaliLab &copy; 2026 - Combatimos el sedentarismo escolar.
-    </footer>
 </body>
 </html>
