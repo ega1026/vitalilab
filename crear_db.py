@@ -1,28 +1,36 @@
 import sqlite3
 
-def crear_base_datos():
-    conexion = sqlite3.connect("vida_saludable.db")
+def inicializar_bd():
+    conexion = sqlite3.connect('vida_saludable.db')
     cursor = conexion.cursor()
     
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS perfiles (
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            correo TEXT UNIQUE NOT NULL,
-            contrasena TEXT NOT NULL,
-            edad INTEGER DEFAULT 0,
-            grado TEXT DEFAULT '',
-            vasos_agua INTEGER DEFAULT 0,
-            peso REAL DEFAULT 0,
-            altura REAL DEFAULT 0,
-            imc REAL DEFAULT 0,
-            fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+            nombre TEXT NOT NULL UNIQUE,
+            edad INTEGER,
+            grado TEXT,
+            agua INTEGER DEFAULT 0,
+            racha INTEGER DEFAULT 0,
+            puntos INTEGER DEFAULT 0
         )
-    """)
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS retos_diarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER,
+            fecha TEXT,
+            agua_cumplida BOOLEAN DEFAULT 0,
+            dormir_cumplido BOOLEAN DEFAULT 0,
+            entrenamiento_cumplido BOOLEAN DEFAULT 0,
+            FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+        )
+    ''')
     
     conexion.commit()
     conexion.close()
-    print("Base de datos actualizada con campo de fecha.")
+    print("Base de datos creada y actualizada con éxito.")
 
-if __name__ == "__main__":
-    crear_base_datos()
+if __name__ == '__main__':
+    inicializar_bd()

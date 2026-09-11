@@ -63,7 +63,7 @@ def registro():
             conexion.close()
             return render_template('login.html', error="El usuario ya existe. Inicia sesión.")
             
-        cursor.execute("INSERT INTO usuarios (nombre, edad, grado, agua) VALUES (?, ?, ?, 0)", (nombre_usuario, edad, grado))
+        cursor.execute("INSERT INTO usuarios (nombre, edad, grado, agua, racha, puntos) VALUES (?, ?, ?, 0, 0, 0)", (nombre_usuario, edad, grado))
         conexion.commit()
         nuevo_id = cursor.lastrowid
         conexion.close()
@@ -73,6 +73,32 @@ def registro():
     except Exception as e:
         conexion.close()
         return render_template('login.html', error=f"Error al registrar: {str(e)}")
+
+@app.route('/actualizar_retos', methods=['POST'])
+def actualizar_retos():
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+        
+    usuario_id = session['usuario_id']
+    agua = 1 if 'agua' in request.form else 0
+    dormir = 1 if 'dormir' in request.form else 0
+    entrenamiento = 1 if 'entrenamiento' in request.form else 0
+    
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    
+    puntos_ganados = (agua + dormir + entrenamiento) * 10
+    
+    cursor.execute('''
+        UPDATE usuarios 
+        SET puntos = puntos + ?, racha = racha + 1 
+        WHERE id = ?
+    ''', (puntos_ganados, usuario_id))
+    
+    conexion.commit()
+    conexion.close()
+    
+    return redirect(url_for('perfil'))
 
 @app.route('/perfil')
 def perfil():
