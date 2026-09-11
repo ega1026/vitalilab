@@ -39,6 +39,7 @@ def login():
         
         if usuario:
             session['usuario_id'] = usuario['id']
+            # REDIRECCIÓN DIRECTA AL PERFIL / APARTADO DE METAS
             return redirect(url_for('perfil'))
         else:
             error = "Usuario no encontrado. Puedes registrarte abajo."
@@ -69,6 +70,7 @@ def registro():
         conexion.close()
         
         session['usuario_id'] = nuevo_id
+        # REDIRECCIÓN DIRECTA AL PERFIL TRAS REGISTRARSE
         return redirect(url_for('perfil'))
     except Exception as e:
         conexion.close()
@@ -111,6 +113,7 @@ def perfil():
     usuario = cursor.fetchone()
     conexion.close()
     
+    # Aquí es donde se renderiza el apartado bonito con las metas y el checklist
     return render_template('perfil.html', usuario=usuario)
 
 @app.route('/logout')

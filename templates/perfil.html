@@ -3,114 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaliLab - Mi Perfil</title>
+    <title>VitaliLab - Mi Panel y Metas</title>
     <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
-    <!-- CSS Principal -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') if url_for else 'style.css' }}">
-    <!-- FontAwesome para iconos -->
+    <!-- Tailwind CSS CDN para un diseño moderno e impecable -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SweetAlert2 para alertas modernas -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
-    <header class="navbar">
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" class="logo-img">
-            <h1>VitaliLab</h1>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo" class="w-9 h-9 object-contain">
+                <h1 class="text-xl font-black text-emerald-600 tracking-wide">VitaliLab</h1>
+            </div>
+            <nav class="flex items-center space-x-6">
+                <a href="{{ url_for('index') }}" class="text-slate-600 hover:text-emerald-600 font-medium transition flex items-center gap-2"><i class="fa-solid fa-house"></i> Inicio</a>
+                <a href="{{ url_for('logout') }}" class="text-rose-500 hover:text-rose-700 font-medium transition flex items-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+            </nav>
         </div>
-        <nav>
-            <a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> Inicio</a>
-            <a href="{{ url_for('perfil') }}" class="active"><i class="fa-solid fa-user"></i> Perfil</a>
-            <a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
-        </nav>
     </header>
 
-    <main class="container">
-        <section class="card-welcome">
-            <h2><i class="fa-solid fa-user-shield"></i> Bienvenido, {{ usuario.nombre }}</h2>
-            <p>Grado: <strong>{{ usuario.grado }}</strong> | Edad: <strong>{{ usuario.edad }} años</strong></p>
-            <p style="margin-top: 8px; font-size: 0.95rem; color: #555;">Combatimos el sedentarismo en nuestra comunidad educativa para alcanzar el éxito integral de cada estudiante[cite: 2].</p>
+    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-grow">
+        <!-- Tarjeta de Bienvenida y Estadísticas Rápidas -->
+        <section class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 md:p-8 text-white shadow-lg mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                        <i class="fa-solid fa-user-check"></i> ¡Hola, {{ usuario.nombre }}!
+                    </h2>
+                    <p class="text-emerald-100 mt-2 text-sm md:text-base">Este es tu panel personal. Cada hábito que cumples hoy te acerca a una vida más activa y saludable.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap"></i> {{ usuario.grado }}
+                    </span>
+                    <span class="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-amber-300"></i> {{ usuario.racha }} días racha
+                    </span>
+                    <span class="bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-star text-yellow-300"></i> {{ usuario.puntos }} pts
+                    </span>
+                </div>
+            </div>
         </section>
 
-        <div class="dashboard-grid">
-            <!-- Sección de Hidratación -->
-            <div class="card">
-                <h3><i class="fa-solid fa-droplet" style="color: #007bff;"></i> Control de Hidratación</h3>
-                <p>Lleva el conteo de tus vasos de agua diarios[cite: 2]:</p>
-                <p style="margin: 15px 0; font-size: 1.2rem;">Vasos consumidos hoy: <span id="contador-agua" style="font-weight: bold; color: #007bff;">{{ usuario.agua | default(0) }}</span></p>
-                <button class="btn-primary" onclick="registrarAgua()"><i class="fa-solid fa-plus"></i> Registrar Vaso</button>
+        <!-- Sección de Metas Visuales -->
+        <h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-chart-pie text-emerald-600"></i> Tu Progreso y Metas Diarias
+        </h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Meta de Agua -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-sky-500"></div>
+                <h4 class="font-bold text-slate-700">Meta de Agua</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Objetivo: 2 Litros diarios</p>
+                
+                <!-- Barra circular simulada con Tailwind -->
+                <div class="my-4 relative w-24 h-24 rounded-full flex items-center justify-center bg-sky-50 border-4 border-sky-500 shadow-inner">
+                    <span class="text-xl font-extrabold text-sky-600">80%</span>
+                </div>
+                <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full"><i class="fa-solid fa-check"></i> En buen camino</span>
             </div>
 
-            <!-- Nuevo Apartado: Calculadora de IMC -->
-            <div class="card">
-                <h3><i class="fa-solid fa-calculator" style="color: #28a745;"></i> Calculadora de IMC</h3>
-                <p>Calcula tu Índice de Masa Corporal al instante:</p>
-                <div class="form-group" style="margin-top: 10px; margin-bottom: 12px; text-align: left;">
-                    <label for="peso" style="display: block; font-weight: bold; font-size: 0.9rem;">Peso (kg):</label>
-                    <input type="number" id="peso" step="0.1" placeholder="Ej. 60" style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+            <!-- Meta de Sueño -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-indigo-500"></div>
+                <h4 class="font-bold text-slate-700">Descanso Ideal</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Objetivo: 8 horas</p>
+                
+                <div class="my-4 relative w-24 h-24 rounded-full flex items-center justify-center bg-indigo-50 border-4 border-indigo-500 shadow-inner">
+                    <span class="text-xl font-extrabold text-indigo-600">100%</span>
                 </div>
-                <div class="form-group" style="margin-bottom: 15px; text-align: left;">
-                    <label for="altura" style="display: block; font-weight: bold; font-size: 0.9rem;">Altura (m):</label>
-                    <input type="number" id="altura" step="0.01" placeholder="Ej. 1.70" style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;">
+                <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full"><i class="fa-solid fa-fire"></i> ¡Meta cumplida!</span>
+            </div>
+
+            <!-- Meta de Pausas Activas -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1.5 bg-amber-500"></div>
+                <h4 class="font-bold text-slate-700">Pausas Activas</h4>
+                <p class="text-xs text-slate-400 mt-0.5">Objetivo: 3 sesiones</p>
+                
+                <div class="my-4 relative w-24 h-24 rounded-full flex items-center justify-center bg-amber-50 border-4 border-amber-500 shadow-inner">
+                    <span class="text-xl font-extrabold text-amber-600">50%</span>
                 </div>
-                <button class="btn-primary" onclick="calcularIMC()" style="background-color: #28a745;"><i class="fa-solid fa-heart-pulse"></i> Calcular IMC</button>
+                <span class="text-xs font-semibold text-amber-600 bg-amber-50 px-3 py-1 rounded-full"><i class="fa-solid fa-bolt"></i> ¡Tú puedes!</span>
             </div>
         </div>
+
+        <!-- Checklist Interactivo -->
+        <section class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
+            <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-emerald-600"></i> Checklist de Retos Diarios
+            </h3>
+            <p class="text-sm text-slate-500 mb-6">Marca los retos que cumpliste hoy para sumar puntos y aumentar tu racha:</p>
+            
+            <form action="{{ url_for('actualizar_retos') }}" method="POST" class="space-y-4">
+                <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
+                    <input type="checkbox" name="agua" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 mr-3">
+                    <span class="font-medium text-slate-700">💧 Tomar 2 litros de agua</span>
+                </label>
+                
+                <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
+                    <input type="checkbox" name="dormir" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 mr-3">
+                    <span class="font-medium text-slate-700">😴 Dormir al menos 8 horas</span>
+                </label>
+                
+                <label class="flex items-center p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition cursor-pointer">
+                    <input type="checkbox" name="entrenamiento" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 mr-3">
+                    <span class="font-medium text-slate-700">🏃‍♂️ Cumplir con pausas activas o ejercicio</span>
+                </label>
+                
+                <button type="submit" class="w-full sm:w-auto mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar Mis Avances de Hoy
+                </button>
+            </form>
+        </section>
     </main>
 
-    <script>
-        function registrarAgua() {
-            Swal.fire({
-                title: '¡Buen trabajo!',
-                text: 'Has registrado un vaso de agua con éxito para tu vida saludable.',
-                icon: 'success',
-                confirmButtonColor: '#007bff'
-            }).then(() => {
-                let contador = document.getElementById('contador-agua');
-                let valorActual = parseInt(contador.innerText) || 0;
-                contador.innerText = valorActual + 1;
-            });
-        }
-
-        function calcularIMC() {
-            let peso = parseFloat(document.getElementById('peso').value);
-            let altura = parseFloat(document.getElementById('altura').value);
-
-            if (!peso || !altura || peso <= 0 || altura <= 0) {
-                Swal.fire({
-                    title: 'Datos incorrectos',
-                    text: 'Por favor ingresa un peso y una altura válidos.',
-                    icon: 'error',
-                    confirmButtonColor: '#d33'
-                });
-                return;
-            }
-
-            let imc = peso / (altura * altura);
-            let clasificacion = '';
-            let colorIcon = 'info';
-
-            if (imc < 18.5) {
-                clasificacion = 'Peso bajo (Necesitas nutrirte mejor)';
-                colorIcon = 'warning';
-            } else if (imc >= 18.5 && imc < 25) {
-                clasificacion = 'Peso saludable (¡Excelente, sigue así!)';
-                colorIcon = 'success';
-            } else if (imc >= 25 && imc < 30) {
-                clasificacion = 'Sobrepeso (Aumenta tu actividad física)';
-                colorIcon = 'warning';
-            } else {
-                clasificacion = 'Obesidad (Consulta con un especialista)';
-                colorIcon = 'error';
-            }
-
-            Swal.fire({
-                title: 'Tu IMC es ' + imc.toFixed(2),
-                text: 'Clasificación: ' + clasificacion,
-                icon: colorIcon,
-                confirmButtonColor: '#007bff'
-            });
-        }
-    </script>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400 mt-8">
+        VitaliLab &copy; 2026 - Combatimos el sedentarismo escolar.
+    </footer>
 </body>
 </html>

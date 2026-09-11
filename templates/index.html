@@ -8,8 +8,46 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        #pantalla-carga {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top: 5px solid #10b981;
+            border-radius: 50%;
+            animation: girar 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes girar {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Pantalla de Carga para evitar el efecto de Render -->
+    <div id="pantalla-carga">
+        <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" style="width: 70px; height: 70px; margin-bottom: 15px; object-fit: contain;">
+        <div class="spinner"></div>
+        <h3 style="color: #1e293b; font-family: sans-serif; font-size: 1.1rem; font-weight: bold;">Iniciando VitaliLab...</h3>
+        <p style="color: #64748b; font-family: sans-serif; font-size: 0.9rem; margin-top: 5px;">Conectando con el servidor, un momento por favor.</p>
+    </div>
+
     <header class="navbar">
         <div class="logo-container">
             <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" class="logo-img">
@@ -27,7 +65,7 @@
     <main class="container">
         <section class="card-welcome">
             <h2><i class="fa-solid fa-heart-pulse" style="color: #10b981;"></i> ¡Bienvenido a VitaliLab!</h2>
-            <p>Combatimos el sedentarismo en nuestra comunidad educativa para alcanzar el éxito integral de cada estudiante[cite: 3]. Explora las herramientas o accede a las secciones informativas detalladas en la parte superior.</p>
+            <p>Combatimos el sedentarismo en nuestra comunidad educativa para alcanzar el éxito integral de cada estudiante[cite: 2]. Explora las herramientas o accede a las secciones informativas detalladas en la parte superior.</p>
             <div style="margin-top: 20px;">
                 <a href="{{ url_for('login') }}" class="btn-success" style="text-decoration: none; width: auto; display: inline-flex;"><i class="fa-solid fa-user-plus"></i> Crear Perfil o Ingresar</a>
             </div>
@@ -50,7 +88,7 @@
 
             <div class="card">
                 <h3><i class="fa-solid fa-droplet" style="color: #0ea5e9;"></i> Control de Hidratación</h3>
-                <p>Simula el consumo diario de vasos de agua:</p>
+                <p>Simula el consumo diario de vasos de agua[cite: 2]:</p>
                 <p style="margin: 20px 0; font-size: 1.3rem;">Vasos de prueba: <span id="contador-agua-home" style="font-weight: bold; color: #0ea5e9;">0</span></p>
                 <button class="btn-primary" onclick="registrarAguaHome()"><i class="fa-solid fa-plus"></i> Registrar Vaso</button>
             </div>
@@ -85,6 +123,14 @@
     </main>
 
     <script>
+        window.addEventListener('load', function() {
+            const pantalla = document.getElementById('pantalla-carga');
+            pantalla.style.opacity = '0';
+            setTimeout(() => {
+                pantalla.style.display = 'none';
+            }, 500);
+        });
+
         function calcularIMCHome() {
             let peso = parseFloat(document.getElementById('peso-home').value);
             let altura = parseFloat(document.getElementById('altura-home').value);
