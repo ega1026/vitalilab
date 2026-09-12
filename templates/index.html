@@ -40,7 +40,6 @@
 </head>
 <body>
 
-    <!-- Pantalla de Carga para evitar el efecto de Render -->
     <div id="pantalla-carga">
         <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" style="width: 70px; height: 70px; margin-bottom: 15px; object-fit: contain;">
         <div class="spinner"></div>
@@ -65,7 +64,7 @@
     <main class="container">
         <section class="card-welcome">
             <h2><i class="fa-solid fa-heart-pulse" style="color: #10b981;"></i> ¡Bienvenido a VitaliLab!</h2>
-            <p>Combatimos el sedentarismo en nuestra comunidad educativa para alcanzar el éxito integral de cada estudiante[cite: 2]. Explora las herramientas o accede a las secciones informativas detalladas en la parte superior.</p>
+            <p>Combatimos el sedentarismo en nuestra comunidad para alcanzar el bienestar integral de cada usuario. Explora las herramientas o accede a las secciones informativas detalladas en la parte superior.</p>
             <div style="margin-top: 20px;">
                 <a href="{{ url_for('login') }}" class="btn-success" style="text-decoration: none; width: auto; display: inline-flex;"><i class="fa-solid fa-user-plus"></i> Crear Perfil o Ingresar</a>
             </div>
@@ -88,7 +87,7 @@
 
             <div class="card">
                 <h3><i class="fa-solid fa-droplet" style="color: #0ea5e9;"></i> Control de Hidratación</h3>
-                <p>Simula el consumo diario de vasos de agua[cite: 2]:</p>
+                <p>Simula el consumo diario de vasos de agua:</p>
                 <p style="margin: 20px 0; font-size: 1.3rem;">Vasos de prueba: <span id="contador-agua-home" style="font-weight: bold; color: #0ea5e9;">0</span></p>
                 <button class="btn-primary" onclick="registrarAguaHome()"><i class="fa-solid fa-plus"></i> Registrar Vaso</button>
             </div>
@@ -96,28 +95,8 @@
             <div class="card">
                 <h3><i class="fa-solid fa-person-running" style="color: #f59e0b;"></i> Pausas Activas</h3>
                 <p>Consejo rápido para evitar el sedentarismo:</p>
-                <p style="font-style: italic; color: #64748b; margin: 15px 0;">"Estira tus brazos y piernas durante 3 minutos cada hora de estudio."</p>
+                <p style="font-style: italic; color: #64748b; margin: 15px 0;">"Estira tus brazos y piernas durante 3 minutos cada hora."</p>
                 <button class="btn-success" style="background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="mostrarTip()"><i class="fa-solid fa-lightbulb"></i> Ver Tip Extra</button>
-            </div>
-        </div>
-
-        <div class="dashboard-grid" style="margin-top: 30px;">
-            <div class="card">
-                <h3><i class="fa-solid fa-circle-question" style="color: #0ea5e9;"></i> ¿Qué es el IMC?</h3>
-                <p style="color: #64748b; line-height: 1.6; margin-top: 10px;">Conoce a fondo las fórmulas científicas, rangos y tablas oficiales de clasificación corporal.</p>
-                <a href="{{ url_for('imc_page') }}" class="btn-primary" style="margin-top: 15px; text-decoration: none; display: inline-block; text-align: center;"><i class="fa-solid fa-arrow-right"></i> Abrir Sección IMC</a>
-            </div>
-
-            <div class="card">
-                <h3><i class="fa-solid fa-shield-heart" style="color: #10b981;"></i> ¿Por qué cuidarte?</h3>
-                <p style="color: #64748b; line-height: 1.6; margin-top: 10px;">Descubre los beneficios físicos, mentales y el impacto directo en tu rendimiento académico.</p>
-                <a href="{{ url_for('cuidarte_page') }}" class="btn-success" style="margin-top: 15px; text-decoration: none; display: inline-block; text-align: center;"><i class="fa-solid fa-arrow-right"></i> Ver Razones</a>
-            </div>
-
-            <div class="card">
-                <h3><i class="fa-solid fa-graduation-cap" style="color: #f59e0b;"></i> ¿En qué se basa?</h3>
-                <p style="color: #64748b; line-height: 1.6; margin-top: 10px;">Explora la base teórica, guías institucionales y la tecnología Flask/SQLite detrás de VitaliLab.</p>
-                <a href="{{ url_for('fundamentos_page') }}" class="btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); margin-top: 15px; text-decoration: none; display: inline-block; text-align: center;"><i class="fa-solid fa-arrow-right"></i> Ver Fundamentos</a>
             </div>
         </div>
     </main>

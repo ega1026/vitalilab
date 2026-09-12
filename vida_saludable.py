@@ -1,14 +1,6 @@
 import os
+from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
-import importlib
-
-flask_module = importlib.import_module('flask')
-Flask = flask_module.Flask
-render_template = flask_module.render_template
-request = flask_module.request
-redirect = flask_module.redirect
-url_for = flask_module.url_for
-session = flask_module.session
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_vitalilab'
@@ -17,6 +9,31 @@ def conectar_db():
     conexion = sqlite3.connect('vida_saludable.db')
     conexion.row_factory = sqlite3.Row
     return conexion
+
+def inicializar_bd():
+    conexion = conectar_db()
+    cursor = conexion.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            correo TEXT UNIQUE NOT NULL,
+            contrasena TEXT NOT NULL,
+            edad INTEGER DEFAULT 0,
+            grado TEXT DEFAULT 'Comunidad General',
+            vasos_agua INTEGER DEFAULT 0,
+            peso REAL DEFAULT 0,
+            altura REAL DEFAULT 0,
+            imc REAL DEFAULT 0,
+            racha INTEGER DEFAULT 0,
+            puntos INTEGER DEFAULT 0,
+            fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+    conexion.commit()
+    conexion.close()
+
+inicializar_bd()
 
 @app.route('/')
 def index():
@@ -32,7 +49,7 @@ def cuidarte_page():
 
 @app.route('/fundamentos-info')
 def fundamentos_page():
-    return render_template('fundamentos_page.html')
+    return render_template('fundamentos_info.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
