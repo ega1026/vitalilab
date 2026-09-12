@@ -27,6 +27,7 @@ def inicializar_bd():
             imc REAL DEFAULT 0,
             racha INTEGER DEFAULT 0,
             puntos INTEGER DEFAULT 0,
+            nivel TEXT DEFAULT 'Novato Saludable',
             fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -90,8 +91,8 @@ def registro():
             return render_template('login.html', error="Este correo ya está registrado.")
             
         cursor.execute('''
-            INSERT INTO usuarios (nombre, correo, contrasena, edad, grado, vasos_agua, racha, puntos) 
-            VALUES (?, ?, ?, 0, 'Comunidad General', 0, 0, 0)
+            INSERT INTO usuarios (nombre, correo, contrasena, edad, grado, vasos_agua, racha, puntos, nivel) 
+            VALUES (?, ?, ?, 0, 'Comunidad General', 0, 0, 0, 'Novato Saludable')
         ''', (nombre, correo, contrasena))
         conexion.commit()
         nuevo_id = cursor.lastrowid
@@ -116,13 +117,25 @@ def actualizar_retos():
     conexion = conectar_db()
     cursor = conexion.cursor()
     
-    puntos_ganados = (agua + dormir + entrenamiento) * 10
+    puntos_ganados = (agua + dormir + entrenamiento) * 15
     
+    cursor.execute("SELECT puntos, racha FROM usuarios WHERE id = ?", (usuario_id,))
+    actual = cursor.fetchone()
+    
+    nuevos_puntos = actual['puntos'] + puntos_ganados
+    nueva_racha = actual['racha'] + 1
+    
+    nuevo_nivel = 'Novato Saludable'
+    if nuevos_puntos >= 100:
+        nuevo_nivel = 'Guerrero Vital'
+    if nuevos_puntos >= 250:
+        nuevo_nivel = 'Leyenda Fit'
+
     cursor.execute('''
         UPDATE usuarios 
-        SET puntos = puntos + ?, racha = racha + 1 
+        SET puntos = ?, racha = ?, nivel = ? 
         WHERE id = ?
-    ''', (puntos_ganados, usuario_id))
+    ''', (nuevos_puntos, nueva_racha, nuevo_nivel, usuario_id))
     
     conexion.commit()
     conexion.close()

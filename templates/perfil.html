@@ -7,6 +7,7 @@
     <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header class="navbar">
@@ -20,39 +21,82 @@
         </nav>
     </header>
 
-    <main class="container" style="max-width: 800px; margin-top: 30px;">
-        <section class="card-welcome" style="text-align: left; margin-bottom: 20px;">
+    <main class="container" style="max-width: 900px; margin-top: 30px;">
+        <section class="card-welcome" style="text-align: left; margin-bottom: 25px;">
             <h2><i class="fa-solid fa-user-shield" style="color: #10b981;"></i> ¡Hola, {{ usuario.nombre }}!</h2>
-            <p>Bienvenido a tu panel de control de hábitos y rachas comunitarias.</p>
-            <div style="display: flex; gap: 20px; margin-top: 15px;">
-                <p> <strong>Racha:</strong> {{ usuario.racha }} Días</p>
-                <p> <strong>Puntos XP:</strong> {{ usuario.puntos }}</p>
+            <p>Panel de control funcional para tu rendimiento diario y hábitos saludables.</p>
+            <div style="display: flex; gap: 25px; margin-top: 15px; flex-wrap: wrap; font-size: 1.05rem;">
+                <p>🔥 <strong>Racha:</strong> {{ usuario.racha }} Días</p>
+                <p>⭐ <strong>Puntos XP:</strong> {{ usuario.puntos }}</p>
+                <p>🏆 <strong>Rango:</strong> <span style="color: #fef08a; font-weight: bold;">{{ usuario.nivel }}</span></p>
             </div>
         </section>
 
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 25px;">
+            <div class="card" style="text-align: left;">
+                <h3><i class="fa-solid fa-list-check" style="color: #0ea5e9;"></i> Retos Diarios</h3>
+                <p style="margin-bottom: 15px; color: var(--text-muted); font-size: 0.9rem;">Cumple tus metas de hoy para ganar +15 XP por cada una:</p>
+                
+                <form action="{{ url_for('actualizar_retos') }}" method="POST">
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" name="agua" value="1" style="width: 18px; height: 18px; accent-color: var(--primary);"> 💧 Beber 2L de agua
+                        </label>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" name="dormir" value="1" style="width: 18px; height: 18px; accent-color: var(--primary);"> 🛌 Dormir 7-8 horas
+                        </label>
+                    </div>
+                    <div style="margin-bottom: 18px;">
+                        <label style="font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" name="entrenamiento" value="1" style="width: 18px; height: 18px; accent-color: var(--primary);"> 🏃‍♂️ Pausas activas
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-success" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> Registrar Avance</button>
+                </form>
+            </div>
+
+            <div class="card" style="text-align: left; display: flex; flex-direction: column; justify-content: space-between;">
+                <h3><i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> Reto del Día</h3>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 12px; border-left: 4px solid #f59e0b; margin: 10px 0;">
+                    <p style="font-style: italic; color: var(--text-main); font-size: 0.95rem;">"Evita el consumo de bebidas azucaradas durante todo el día y opta únicamente por agua natural."</p>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Suma constancia para desbloquear el siguiente nivel (Guerrero Vital a los 100 XP).</p>
+            </div>
+        </div>
+
         <div class="card" style="text-align: left;">
-            <h3><i class="fa-solid fa-list-check" style="color: #0ea5e9;"></i> Checklist de Hábitos Diarios</h3>
-            <p style="margin-bottom: 20px; color: #64748b;">Marca tus metas cumplidas hoy para sumar puntos y mantener tu racha activa:</p>
-            
-            <form action="{{ url_for('actualizar_retos') }}" method="POST">
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" name="agua" value="1" style="width: 18px; height: 18px;">  Beber al menos 2 litros de agua
-                    </label>
-                </div>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" name="dormir" value="1" style="width: 18px; height: 18px;">  Dormir entre 7 y 8 horas reparadoras
-                    </label>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" name="entrenamiento" value="1" style="width: 18px; height: 18px;">  Cumplir con tu entrenamiento o pausas activas
-                    </label>
-                </div>
-                <button type="submit" class="btn-success" style="width: 100%;"><i class="fa-solid fa-floppy-disk"></i> Guardar y Actualizar Progreso</button>
-            </form>
+            <h3><i class="fa-solid fa-chart-line" style="color: var(--primary);"></i> Progreso General de Puntos</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Visualiza tu evolución acumulada en la plataforma:</p>
+            <div style="position: relative; height: 200px; width: 100%;">
+                <canvas id="graficoProgreso"></canvas>
+            </div>
         </div>
     </main>
-</body>
-</html>
+
+   <script>
+        const puntosUsuario = Number("{{ usuario.puntos }}");
+        const ctx = document.getElementById('graficoProgreso').getContext('2d');
+        const graficoProgreso = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Inicio', 'Progreso Actual', 'Meta Guerrero', 'Meta Leyenda'],
+                datasets: [{
+                    label: 'Puntos XP',
+                    data: [0, puntosUsuario, 100, 250],
+                    backgroundColor: ['#cbd5e1', '#059669', '#0284c7', '#f59e0b'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
