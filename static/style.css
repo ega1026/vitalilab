@@ -1,12 +1,12 @@
 :root {
-    --primary: #059669; /* Esmeralda vibrante */
+    --primary: #059669;
     --primary-hover: #047857;
     --primary-light: #d1fae5;
-    --secondary: #0284c7; /* Azul profundo y moderno */
-    --accent: #f59e0b; /* Ámbar brillante para rachas y alertas */
-    --bg-main: #f0fdf4; /* Fondo general con un sutil tono verde/vida */
+    --secondary: #0284c7;
+    --accent: #f59e0b;
+    --bg-main: #f0fdf4;
     --card-bg: #ffffff;
-    --text-main: #0f172a; /* Slate muy oscuro para máxima legibilidad */
+    --text-main: #0f172a;
     --text-muted: #475569;
     --border-color: #cbd5e1;
 }
@@ -26,14 +26,13 @@ body {
     flex-direction: column;
 }
 
-/* Barra de navegación */
 .navbar {
     background: #ffffff;
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -80,7 +79,6 @@ body {
     color: var(--primary);
 }
 
-/* Contenedores y Tarjetas */
 .container {
     max-width: 1000px;
     margin: 40px auto;
@@ -112,24 +110,12 @@ body {
     line-height: 1.6;
 }
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-}
-
 .card {
     background: var(--card-bg);
     border: 1px solid #e2e8f0;
     border-radius: 20px;
     padding: 25px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
 }
 
 .card h3 {
@@ -148,7 +134,6 @@ body {
     line-height: 1.5;
 }
 
-/* Botones con alto contraste */
 .btn-primary, .btn-success {
     display: inline-flex;
     align-items: center;
@@ -162,17 +147,13 @@ body {
     border-radius: 12px;
     cursor: pointer;
     text-decoration: none;
-    transition: background 0.2s ease, transform 0.1s ease;
+    transition: background 0.2s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .btn-primary {
     background: var(--secondary);
     color: #ffffff;
-}
-
-.btn-primary:hover {
-    background: #02699c;
 }
 
 .btn-success {
@@ -182,25 +163,4 @@ body {
 
 .btn-success:hover {
     background: var(--primary-hover);
-}
-
-/* Entradas de formulario */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"] {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    font-size: 0.95rem;
-    color: var(--text-main);
-    background: #ffffff;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
 }
