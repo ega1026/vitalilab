@@ -2,64 +2,66 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso - VitaliLab</title>
-    <link rel="icon" href="{{ url_for('static', filename='logovitalilab.png') }}" type="image/png">
+    <title>VitaliLab - Iniciar Sesión / Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-    <header class="navbar">
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" class="logo-img">
-            <h1>VitaliLab</h1>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='logovitalilab.png') }}" alt="Logo VitaliLab" width="120">
+            <h2 class="mt-2">Bienvenido a VitaliLab</h2>
         </div>
-        <nav>
-            <a href="{{ url_for('index') }}"><i class="fa-solid fa-house"></i> Inicio</a>
-        </nav>
-    </header>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-    <main class="container" style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; margin-top: 40px;">
-        <div class="card" style="flex: 1; min-width: 300px; max-width: 400px;">
-            <h3><i class="fa-solid fa-right-to-bracket" style="color: #10b981;"></i> Iniciar Sesión</h3>
-            
-            {% if error %}
-            <div style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem;">
-                {{ error }}
+        <div class="row justify-content-center">
+            <!-- Formulario de Inicio de Sesión -->
+            <div class="col-md-5 mb-4">
+                <div class="vitalilab-card h-100">
+                    <h4 class="mb-3 text-center">Iniciar Sesión</h4>
+                    <form method="POST" action="{{ url_for('login') }}">
+                        <div class="mb-3">
+                            <label for="login-email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="login-email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="login-password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="login-password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-vitalilab w-100">Entrar</button>
+                    </form>
+                </div>
             </div>
-            {% endif %}
 
-            <form action="{{ url_for('login') }}" method="POST">
-                <div class="form-group" style="text-align: left; margin-bottom: 15px;">
-                    <label style="font-weight: bold; font-size: 0.9rem;">Correo electrónico:</label>
-                    <input type="email" name="correo" placeholder="tucorreo@ejemplo.com" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <!-- Formulario de Registro -->
+            <div class="col-md-5 mb-4">
+                <div class="vitalilab-card h-100">
+                    <h4 class="mb-3 text-center">Crear Cuenta Nueva</h4>
+                    <form method="POST" action="{{ url_for('register') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Nombre de Usuario</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="register-email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="register-email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="register-password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="register-password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-outline-secondary w-100">Registrarme</button>
+                    </form>
                 </div>
-                <div class="form-group" style="text-align: left; margin-bottom: 20px;">
-                    <label style="font-weight: bold; font-size: 0.9rem;">Contraseña:</label>
-                    <input type="password" name="contrasena" placeholder="••••••••" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 8px;">
-                </div>
-                <button type="submit" class="btn-success" style="width: 100%;"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar</button>
-            </form>
+            </div>
         </div>
-
-        <div class="card" style="flex: 1; min-width: 300px; max-width: 400px;">
-            <h3><i class="fa-solid fa-user-plus" style="color: #0ea5e9;"></i> Únete a la Comunidad</h3>
-            <form action="{{ url_for('registro') }}" method="POST">
-                <div class="form-group" style="text-align: left; margin-bottom: 15px;">
-                    <label style="font-weight: bold; font-size: 0.9rem;">Nombre o Apodo:</label>
-                    <input type="text" name="nombre" placeholder="Ej. Carlos Vital" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 8px;">
-                </div>
-                <div class="form-group" style="text-align: left; margin-bottom: 15px;">
-                    <label style="font-weight: bold; font-size: 0.9rem;">Correo electrónico:</label>
-                    <input type="email" name="correo" placeholder="tucorreo@ejemplo.com" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 8px;">
-                </div>
-                <div class="form-group" style="text-align: left; margin-bottom: 20px;">
-                    <label style="font-weight: bold; font-size: 0.9rem;">Contraseña:</label>
-                    <input type="password" name="contrasena" placeholder="Crea una contraseña" required style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 8px;">
-                </div>
-                <button type="submit" class="btn-primary" style="width: 100%;"><i class="fa-solid fa-user-check"></i> Registrarse</button>
-            </form>
-        </div>
-    </main>
+    </div>
 </body>
 </html>

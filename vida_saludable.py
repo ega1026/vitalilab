@@ -1,165 +1,174 @@
-import os
-from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3
+# Importamos las herramientas necesarias de Flask y Python
+from datetime import date
+import random
+from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash, generate_password_hash
 
+# Inicialización de la aplicación
 app = Flask(__name__)
-app.secret_key = 'clave_secreta_vitalilab'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vida_saludable.db'
+app.config['SECRET_KEY'] = 'clave_secreta_vitalilab'
 
-def conectar_db():
-    conexion = sqlite3.connect('vida_saludable.db')
-    conexion.row_factory = sqlite3.Row
-    return conexion
+db = SQLAlchemy(app)
 
-def inicializar_bd():
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            correo TEXT UNIQUE NOT NULL,
-            contrasena TEXT NOT NULL,
-            edad INTEGER DEFAULT 0,
-            grado TEXT DEFAULT 'Comunidad General',
-            vasos_agua INTEGER DEFAULT 0,
-            peso REAL DEFAULT 0,
-            altura REAL DEFAULT 0,
-            imc REAL DEFAULT 0,
-            racha INTEGER DEFAULT 0,
-            puntos INTEGER DEFAULT 0,
-            nivel TEXT DEFAULT 'Novato Saludable',
-            fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conexion.commit()
-    conexion.close()
+# ==========================================
+# MODELOS DE BASE DE DATOS
+# ==========================================
+class User(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.String(100), nullable=False)
+  email = db.Column(db.String(120), unique=True, nullable=False)
+  password = db.Column(db.String(200), nullable=False)
+  role = db.Column(db.String(20), default='user')
+  is_verified = db.Column(db.Boolean, default=False)
+  verification_code = db.Column(db.String(6), nullable=True)
 
-inicializar_bd()
+class DailyChecklist(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+  date = db.Column(db.String(10), nullable=False)
+
+class Announcement(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  title = db.Column(db.String(150), nullable=False)
+  content = db.Column(db.Text, nullable=False)
+
+with app.app_context():
+  db.create_all()
+
+# ==========================================
+# RUTAS DE LA APLICACIÓN
+# ==========================================
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+  return render_template('index.html')
 
-@app.route('/imc-info')
-def imc_page():
-    return render_template('imc_info.html')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+  if request.method == 'POST':
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
 
-@app.route('/cuidarte-info')
-def cuidarte_page():
-    return render_template('cuidarte_info.html')
+    existing_user = User.query.filter_by(email=email).first()
+    if existing_user:
+      flash('Este correo ya está registrado.', 'danger')
+      return redirect(url_for('register'))
 
-@app.route('/fundamentos-info')
-def fundamentos_page():
-    return render_template('fundamentos_info.html')
+    code = str(random.randint(100000, 999999))
+    hashed_password = generate_password_hash(password)
+
+    new_user = User(
+        username=username,
+        email=email,
+        password=hashed_password,
+        verification_code=code,
+        is_verified=False,
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
+    session['temp_user_id'] = new_user.id
+    flash(f'Registro exitoso. Tu código de verificación es: {code}', 'info')
+    return redirect(url_for('verify_email'))
+
+  return render_template('login.html')
+
+@app.route('/verify', methods=['GET', 'POST'])
+def verify_email():
+  if 'temp_user_id' not in session:
+    return redirect(url_for('register'))
+
+  if request.method == 'POST':
+    entered_code = request.form['code']
+    user = User.query.get(session['temp_user_id'])
+
+    if user and user.verification_code == entered_code:
+      user.is_verified = True
+      user.verification_code = None
+      db.session.commit()
+      session.pop('temp_user_id', None)
+      flash('¡Correo verificado con éxito! Ya puedes iniciar sesión.', 'success')
+      return redirect(url_for('login'))
+    else:
+      flash('Código incorrecto. Inténtalo de nuevo.', 'danger')
+
+  return render_template('completar_perfil.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    error = None
-    if request.method == 'POST':
-        correo = request.form.get('correo', '').strip()
-        contrasena = request.form.get('contrasena', '').strip()
-        
-        conexion = conectar_db()
-        cursor = conexion.cursor()
-        cursor.execute("SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?", (correo, contrasena))
-        usuario = cursor.fetchone()
-        conexion.close()
-        
-        if usuario:
-            session['usuario_id'] = usuario['id']
-            return redirect(url_for('perfil'))
-        else:
-            error = "Correo o contraseña incorrectos."
-            
-    return render_template('login.html', error=error)
+  if request.method == 'POST':
+    email = request.form['email']
+    password = request.form['password']
 
-@app.route('/registro', methods=['POST'])
-def registro():
-    nombre = request.form.get('nombre', '').strip()
-    correo = request.form.get('correo', '').strip()
-    contrasena = request.form.get('contrasena', '').strip()
-    
-    if not nombre or not correo or not contrasena:
-        return render_template('login.html', error="Todos los campos son obligatorios.")
-        
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    try:
-        cursor.execute("SELECT * FROM usuarios WHERE correo = ?", (correo,))
-        if cursor.fetchone():
-            conexion.close()
-            return render_template('login.html', error="Este correo ya está registrado.")
-            
-        cursor.execute('''
-            INSERT INTO usuarios (nombre, correo, contrasena, edad, grado, vasos_agua, racha, puntos, nivel) 
-            VALUES (?, ?, ?, 0, 'Comunidad General', 0, 0, 0, 'Novato Saludable')
-        ''', (nombre, correo, contrasena))
-        conexion.commit()
-        nuevo_id = cursor.lastrowid
-        conexion.close()
-        
-        session['usuario_id'] = nuevo_id
-        return redirect(url_for('perfil'))
-    except Exception as e:
-        conexion.close()
-        return render_template('login.html', error=f"Error al registrar: {str(e)}")
+    user = User.query.filter_by(email=email).first()
 
-@app.route('/actualizar_retos', methods=['POST'])
-def actualizar_retos():
-    if 'usuario_id' not in session:
+    if user and check_password_hash(user.password, password):
+      if not user.is_verified:
+        flash('Debes verificar tu correo antes de iniciar sesión.', 'warning')
         return redirect(url_for('login'))
-        
-    usuario_id = session['usuario_id']
-    agua = 1 if 'agua' in request.form else 0
-    dormir = 1 if 'dormir' in request.form else 0
-    entrenamiento = 1 if 'entrenamiento' in request.form else 0
-    
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    
-    puntos_ganados = (agua + dormir + entrenamiento) * 15
-    
-    cursor.execute("SELECT puntos, racha FROM usuarios WHERE id = ?", (usuario_id,))
-    actual = cursor.fetchone()
-    
-    nuevos_puntos = actual['puntos'] + puntos_ganados
-    nueva_racha = actual['racha'] + 1
-    
-    nuevo_nivel = 'Novato Saludable'
-    if nuevos_puntos >= 100:
-        nuevo_nivel = 'Guerrero Vital'
-    if nuevos_puntos >= 250:
-        nuevo_nivel = 'Leyenda Fit'
 
-    cursor.execute('''
-        UPDATE usuarios 
-        SET puntos = ?, racha = ?, nivel = ? 
-        WHERE id = ?
-    ''', (nuevos_puntos, nueva_racha, nuevo_nivel, usuario_id))
-    
-    conexion.commit()
-    conexion.close()
-    
-    return redirect(url_for('perfil'))
+      session['user_id'] = user.id
+      session['role'] = user.role
+      flash('¡Bienvenido de nuevo a VitaliLab!', 'success')
+      return redirect(url_for('perfil'))
+    else:
+      flash('Correo o contraseña incorrectos.', 'danger')
+
+  return render_template('login.html')
 
 @app.route('/perfil')
 def perfil():
-    if 'usuario_id' not in session:
-        return redirect(url_for('login'))
-        
-    conexion = conectar_db()
-    cursor = conexion.cursor()
-    cursor.execute("SELECT * FROM usuarios WHERE id = ?", (session['usuario_id'],))
-    usuario = cursor.fetchone()
-    conexion.close()
-    
-    return render_template('perfil.html', usuario=usuario)
+  if 'user_id' not in session:
+    return redirect(url_for('login'))
+  return render_template('perfil.html')
 
-@app.route('/logout')
-def logout():
-    session.pop('usuario_id', None)
-    return redirect(url_for('index'))
+@app.route('/checklist', methods=['GET', 'POST'])
+def checklist():
+  if 'user_id' not in session:
+    return redirect(url_for('login'))
+
+  current_user_id = session['user_id']
+  today_str = date.today().strftime('%Y-%m-%d')
+
+  existing_check = DailyChecklist.query.filter_by(
+      user_id=current_user_id, date=today_str
+  ).first()
+
+  if request.method == 'POST':
+    if existing_check:
+      flash('Ya has completado tu checklist el día de hoy.', 'warning')
+      return redirect(url_for('checklist'))
+
+    new_check = DailyChecklist(user_id=current_user_id, date=today_str)
+    db.session.add(new_check)
+    db.session.commit()
+    flash('¡Checklist guardado correctamente por hoy!', 'success')
+    return redirect(url_for('checklist'))
+
+  return render_template('cuidarte_info.html', already_checked=bool(existing_check))
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin_panel():
+  if 'user_id' not in session or session.get('role') != 'admin':
+    flash('Acceso denegado. Solo los administradores pueden ver esta página.', 'danger')
+    return redirect(url_for('perfil'))
+
+  if request.method == 'POST':
+    title = request.form['title']
+    content = request.form['content']
+
+    new_announcement = Announcement(title=title, content=content)
+    db.session.add(new_announcement)
+    db.session.commit()
+    flash('Comunicado publicado exitosamente.', 'success')
+    return redirect(url_for('admin_panel'))
+
+  users = User.query.all()
+  announcements = Announcement.query.all()
+  return render_template('fundamentos_info.html', users=users, announcements=announcements)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+  app.run(debug=True)
